@@ -66,6 +66,17 @@
   <script defer src="intro.js"></script>
 </head>
 <body>
+  <div class="crawl-container">
+  <div class="crawl-text" id="crawlText">
+    In a world where centralized GPUs control the flow of digital creation…<br><br>
+    One protocol rises from the shadows…<br><br>
+    <strong>G-PROOF: The Decentralized Renderpocalypse</strong><br><br>
+    A peer-powered, GPU-fueled revolution.<br>
+    Where every cycle counts, every hash matters.<br><br>
+    <em>Earn. Compete. Evolve.</em><br><br>
+    Welcome to the future of decentralized computation.
+  </div>
+</div>
   <header>
     <h1>G-PROOF: Full Node Dashboard</h1>
     <div class="card">
@@ -101,6 +112,15 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
+    function restartCrawl() {
+    const crawl = document.getElementById("crawlText");
+    crawl.style.animation = "none";
+    void crawl.offsetWidth; // trigger reflow
+    crawl.style.animation = "crawlUp 25s linear forwards";
+  }
+
+  setInterval(restartCrawl, 26000); // Restart after 26s (buffer for animation end)
+    
     // EDIT HERE: Replace with actual deployed contract addresses
     const tokenAddress = "<GPROOF_TOKEN_ADDRESS>";
     const coreAddress = "<GPROOF_CORE_ADDRESS>";
