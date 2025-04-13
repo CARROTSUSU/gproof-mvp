@@ -156,30 +156,57 @@
     }).setOutput([256, 256]);
 
     async function runAndSubmit() {
-  if (!currentTaskInput) {
-    alert("Please get a task first.");
-    return;
-  }
+  if (!currentTaskInput) {
+    alert("Please get a task first.");
+    return;
+  }
 
-  try {
-    const result = render();
-    const flat = result.flat().map(n => Math.round(n * 1000));
-    const hashString = flat.join(",");
-    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
-    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+  try {
+    const result = render(); // Jalankan kernel GPU
+    drawToCanvas(result);    // Lukis hasil ke canvas
 
-    const tx = await coreContract.submitProof(hash);
-    await tx.wait();
-    updateStats(await signer.getAddress());
-    alert("Proof submitted and reward triggered!");
+    const flat = result.flat().map(n => Math.round(n * 1000));
+    const hashString = flat.join(",");
+    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
 
-    currentTaskInput = null;
-    document.getElementById("taskInput").innerText = "-";
-  } catch (err) {
-    alert("Failed to run or submit task.");
-    console.error(err);
-  }
+    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+
+    const tx = await coreContract.submitProof(hash);
+    await tx.wait();
+    updateStats(await signer.getAddress());
+
+    alert("Proof submitted and reward triggered!");
+
+    currentTaskInput = null;
+    document.getElementById("taskInput").innerText = "-";
+  } catch (err) {
+    alert("Failed to run or submit task.");
+    console.error(err);
+  }
 }
+    function drawToCanvas(result) {
+  const canvas = document.getElementById("gpuCanvas");
+  const ctx = canvas.getContext("2d");
+  const width = canvas.width;
+  const height = canvas.height;
+  const imageData = ctx.createImageData(width, height);
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * 4;
+      const value = Math.floor((result[y][x] + 1) * 127.5); // scale -1 to 1 => 0 to 255
+
+      // Warna neon biru kehijauan
+      imageData.data[index] = 0;        // R
+      imageData.data[index + 1] = value; // G
+      imageData.data[index + 2] = 255 - value; // B
+      imageData.data[index + 3] = 255;   // A
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+      }
+    
   </script>
 </body>
 </html>
