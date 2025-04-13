@@ -1,0 +1,38 @@
+.crawl-container {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  width: 100%;
+  perspective: 400px;
+  background: black;
+  color: #00fff7;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  padding-top: 50px;
+  box-shadow: 0 0 30px #00fff799 inset;
+}
+
+.crawl-text {
+  position: absolute;
+  bottom: -100%;
+  width: 80%;
+  left: 10%;
+  font-size: 1.2rem;
+  line-height: 2;
+  transform-origin: bottom center;
+  animation: crawlUp 25s linear forwards;
+}
+
+@keyframes crawlUp {
+  0% {
+    transform: rotateX(20deg) translateZ(0) translateY(100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(25deg) translateZ(-300px) translateY(-300%);
+    opacity: 0;
+  }
+}
