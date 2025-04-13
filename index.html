@@ -1,0 +1,82 @@
+<!-- G-PROOF MVP: GPU Render & Submit Hash -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-PROOF Node</title>
+  <style>
+    body {
+      background-color: #0a0a0a;
+      color: #00fff7;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding-top: 50px;
+    }
+    button {
+      background: #00fff7;
+      color: black;
+      padding: 15px 30px;
+      border: none;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    canvas {
+      margin-top: 20px;
+      border: 2px solid #00fff7;
+    }
+  </style>
+</head>
+<body>
+  <h1>G-PROOF: GPU Render Node</h1>
+  <button onclick="runTask()">Run GPU Task</button>
+  <canvas id="gpuCanvas" width="256" height="256"></canvas>
+  <p id="status"></p>
+
+  <!-- Placeholder for wallet connection -->
+  <div id="walletSection">
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <p id="walletAddress"></p>
+  </div>
+
+  <!-- Placeholder for Smart Contract interaction -->
+  <div id="contractSection">
+    <p>Token Balance: <span id="balance">0</span> $GPROOF</p>
+  </div>
+
+  <!-- Placeholder for Reputation System -->
+  <div id="reputationSection">
+    <p>Tasks Completed: <span id="tasksCompleted">0</span></p>
+    <p>Node Rank: <span id="nodeRank">Novice</span></p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
+  <script>
+    // GPU RENDER TASK
+    const gpu = new GPU();
+
+    const render = gpu.createKernel(function() {
+      return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
+    }).setOutput([256, 256]);
+
+    function runTask() {
+      const result = render();
+      let flat = result.flat().map(n => Math.round(n * 1000));
+      let hash = sha256(flat.join(","));
+      document.getElementById("status").innerText = `Hash submitted: ${hash.slice(0, 16)}...`;
+      // TODO: Submit hash to smart contract
+    }
+
+    // Simple fake SHA256
+    function sha256(msg) {
+      return btoa(unescape(encodeURIComponent(msg))).slice(0, 64);
+    }
+
+    // Placeholder: Connect Wallet
+    function connectWallet() {
+      document.getElementById("walletAddress").innerText = "0x123...ABC";
+    }
+  </script>
+</body>
+</html>
