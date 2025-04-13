@@ -160,13 +160,6 @@
       updateStats(await signer.getAddress());
       alert("Proof submitted and reward triggered!");
     }
-
-    async function claimReward() {
-      const tx = await rewardContract.claimReward();
-      await tx.wait();
-      alert("Reward claimed!");
-      updateStats(await signer.getAddress());
-    }
   </script>
 </body>
 </html>
