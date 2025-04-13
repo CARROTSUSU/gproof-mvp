@@ -108,6 +108,7 @@
 
     let provider, signer;
     let tokenContract, coreContract, taskContract, rewardContract;
+    let currentTaskInput = null;
 
     async function connectWallet() {
       if (window.ethereum) {
@@ -139,9 +140,14 @@
     }
 
     async function getTask() {
-      const input = await taskContract.getNextTask();
-      document.getElementById("taskInput").innerText = input.toString();
-    }
+  try {
+    const input = await taskContract.getNextTask();
+    currentTaskInput = input;
+    document.getElementById("taskInput").innerText = input.toString();
+  } catch (err) {
+    alert("Failed to get task.");
+    console.error(err);
+  }
 
     const gpu = new GPU();
     const render = gpu.createKernel(function () {
@@ -149,17 +155,30 @@
     }).setOutput([256, 256]);
 
     async function runAndSubmit() {
-      const result = render();
-      const flat = result.flat().map(n => Math.round(n * 1000));
-      const hashString = flat.join(",");
-      const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
-      document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+  if (!currentTaskInput) {
+    alert("Please get a task first.");
+    return;
+  }
 
-      const tx = await coreContract.submitProof(hash);
-      await tx.wait();
-      updateStats(await signer.getAddress());
-      alert("Proof submitted and reward triggered!");
-    }
+  try {
+    const result = render();
+    const flat = result.flat().map(n => Math.round(n * 1000));
+    const hashString = flat.join(",");
+    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
+    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+
+    const tx = await coreContract.submitProof(hash);
+    await tx.wait();
+    updateStats(await signer.getAddress());
+    alert("Proof submitted and reward triggered!");
+
+    currentTaskInput = null;
+    document.getElementById("taskInput").innerText = "-";
+  } catch (err) {
+    alert("Failed to run or submit task.");
+    console.error(err);
+  }
+}
   </script>
 </body>
 </html>
