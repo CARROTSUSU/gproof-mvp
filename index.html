@@ -80,7 +80,9 @@
       <h2>GPU Task</h2>
       <canvas id="gpuCanvas" width="256" height="256"></canvas>
       <p><strong>Task Input:</strong> <span id="taskInput">-</span></p>
-      <p><strong>Last Hash:</strong> <span id="lastHash">N/A</span></p>
+      <p><strong>Last Hash:</strong> 
+  <span id="lastHash" style="transition: all 0.3s ease;">N/A</span>
+  <small id="hashTime" style="display:block; font-size: 0.8em; color: #888;"></small></p>
       <button onclick="getTask()">Get Task</button>
       <button onclick="runAndSubmit()">Run Task & Submit</button>
     </div>
@@ -169,7 +171,22 @@
     const hashString = flat.join(",");
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
 
-    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+    // Papar hash dengan gaya & timestamp
+const hashDisplay = document.getElementById("lastHash");
+const hashTime = document.getElementById("hashTime");
+
+hashDisplay.innerText = hash.slice(0, 16) + "...";
+hashDisplay.style.color = "#00ff00"; // hijau bila berjaya
+hashDisplay.style.fontWeight = "bold";
+
+const now = new Date();
+hashTime.innerText = "Submitted at: " + now.toLocaleTimeString();
+
+// Animasi kecil
+hashDisplay.style.transform = "scale(1.2)";
+setTimeout(() => {
+  hashDisplay.style.transform = "scale(1)";
+}, 300);
 
     const tx = await coreContract.submitProof(hash);
     await tx.wait();
