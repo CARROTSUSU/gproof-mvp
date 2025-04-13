@@ -140,44 +140,45 @@
     }
 
     async function getTask() {
-  try {
-    const input = await taskContract.getNextTask();
-    currentTaskInput = input;
-    document.getElementById("taskInput").innerText = input.toString();
-  } catch (err) {
-    alert("Failed to get task.");
-    console.error(err);
-  }
-
+  try {
+    const input = await taskContract.getNextTask();
+    currentTaskInput = input;
+    document.getElementById("taskInput").innerText = input.toString();
+  } catch (err) {
+    alert("Failed to get task.");
+    console.error(err);
+  }
+    }
+    
     const gpu = new GPU();
     const render = gpu.createKernel(function () {
       return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
     }).setOutput([256, 256]);
 
     async function runAndSubmit() {
-  if (!currentTaskInput) {
-    alert("Please get a task first.");
-    return;
-  }
+  if (!currentTaskInput) {
+    alert("Please get a task first.");
+    return;
+  }
 
-  try {
-    const result = render();
-    const flat = result.flat().map(n => Math.round(n * 1000));
-    const hashString = flat.join(",");
-    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
-    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
+  try {
+    const result = render();
+    const flat = result.flat().map(n => Math.round(n * 1000));
+    const hashString = flat.join(",");
+    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
+    document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
 
-    const tx = await coreContract.submitProof(hash);
-    await tx.wait();
-    updateStats(await signer.getAddress());
-    alert("Proof submitted and reward triggered!");
+    const tx = await coreContract.submitProof(hash);
+    await tx.wait();
+    updateStats(await signer.getAddress());
+    alert("Proof submitted and reward triggered!");
 
-    currentTaskInput = null;
-    document.getElementById("taskInput").innerText = "-";
-  } catch (err) {
-    alert("Failed to run or submit task.");
-    console.error(err);
-  }
+    currentTaskInput = null;
+    document.getElementById("taskInput").innerText = "-";
+  } catch (err) {
+    alert("Failed to run or submit task.");
+    console.error(err);
+  }
 }
   </script>
 </body>
