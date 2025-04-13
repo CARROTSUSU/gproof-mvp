@@ -1,61 +1,106 @@
-<!-- G-PROOF MVP: GPU Render & Submit Hash -->
+<!-- G-PROOF: Sci-Fi Node Dashboard UI -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>G-PROOF Node</title>
+  <title>G-PROOF Node Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #0a0a0a;
+      background: radial-gradient(circle at top, #0f0f0f 0%, #000000 100%);
       color: #00fff7;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #111;
+      width: 100%;
       text-align: center;
-      padding-top: 50px;
+      padding: 20px 0;
+      box-shadow: 0 2px 10px #00fff7;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #00fff7;
+      text-shadow: 0 0 5px #00fff7;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 50px;
+      width: 90%;
+      max-width: 1000px;
+    }
+    .card {
+      background-color: #111;
+      border: 1px solid #00fff7;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 20px #00fff799;
+    }
+    canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
     }
     button {
       background: #00fff7;
       color: black;
-      padding: 15px 30px;
+      padding: 12px 20px;
       border: none;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-    }
-    canvas {
-      margin-top: 20px;
-      border: 2px solid #00fff7;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>G-PROOF: GPU Render Node</h1>
-  <button onclick="runTask()">Run GPU Task</button>
-  <canvas id="gpuCanvas" width="256" height="256"></canvas>
-  <p id="status"></p>
+  <header>
+    <h1>G-PROOF: Node Dashboard</h1>
+  </header>
 
-  <!-- Placeholder for wallet connection -->
-  <div id="walletSection">
-    <button onclick="connectWallet()">Connect Wallet</button>
-    <p id="walletAddress"></p>
-  </div>
+  <div class="dashboard">
+    <div class="card">
+      <h2>Node Info</h2>
+      <p><strong>Address:</strong> <span id="wallet">Not connected</span></p>
+      <p><strong>Reputation:</strong> <span id="reputation">0</span></p>
+      <p><strong>Rank:</strong> <span id="rank">Unranked</span></p>
+      <button onclick="connectWallet()">Connect Wallet</button>
+    </div>
 
-  <!-- Placeholder for Smart Contract interaction -->
-  <div id="contractSection">
-    <p>Token Balance: <span id="balance">0</span> $GPROOF</p>
-  </div>
+    <div class="card">
+      <h2>GPU Task</h2>
+      <canvas id="gpuCanvas" width="256" height="256"></canvas>
+      <p><strong>Last Hash:</strong> <span id="lastHash">N/A</span></p>
+      <button onclick="runTask()">Run GPU Task</button>
+    </div>
 
-  <!-- Placeholder for Reputation System -->
-  <div id="reputationSection">
-    <p>Tasks Completed: <span id="tasksCompleted">0</span></p>
-    <p>Node Rank: <span id="nodeRank">Novice</span></p>
+    <div class="card">
+      <h2>Token Stats</h2>
+      <p><strong>$GPROOF Balance:</strong> <span id="balance">0</span></p>
+      <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
+    </div>
+
+    <div class="card">
+      <h2>Node Status</h2>
+      <p>Status: <span style="color:lime">Active</span></p>
+      <p>Uptime: <span id="uptime">0h 0m</span></p>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
-    // GPU RENDER TASK
     const gpu = new GPU();
-
     const render = gpu.createKernel(function() {
       return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
     }).setOutput([256, 256]);
@@ -64,19 +109,26 @@
       const result = render();
       let flat = result.flat().map(n => Math.round(n * 1000));
       let hash = sha256(flat.join(","));
-      document.getElementById("status").innerText = `Hash submitted: ${hash.slice(0, 16)}...`;
+      document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
       // TODO: Submit hash to smart contract
     }
 
-    // Simple fake SHA256
     function sha256(msg) {
       return btoa(unescape(encodeURIComponent(msg))).slice(0, 64);
     }
 
-    // Placeholder: Connect Wallet
     function connectWallet() {
-      document.getElementById("walletAddress").innerText = "0x123...ABC";
+      document.getElementById("wallet").innerText = "0x123...ABC";
     }
+
+    // Simple fake uptime counter
+    let seconds = 0;
+    setInterval(() => {
+      seconds++;
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      document.getElementById("uptime").innerText = `${hours}h ${minutes}m`;
+    }, 1000);
   </script>
 </body>
 </html>
