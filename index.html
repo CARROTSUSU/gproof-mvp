@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>G-PROOF Node Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     body {
       background: radial-gradient(circle at top, #0f0f0f 0%, #000000 100%);
@@ -97,105 +97,43 @@
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
-
   <script>
-    const contractAddress = "0xf11DCc5367BA2d7d2fB7478f6dc945b0Ad27dEe6"; // <-- Gantikan dengan address sebenar
+    const contractAddress = "0xf11DCc5367BA2d7d2fB7478f6dc945b0Ad27dEe6"; // Gantikan dengan kontrak sebenar jika sudah deploy
     const contractABI = [
-  {
-    "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "proofHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "submitProof",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+        "inputs": [
+          { "internalType": "bytes32", "name": "proofHash", "type": "bytes32" }
+        ],
+        "name": "submitProof",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getReputation",
-    "outputs": [
+        "inputs": [
+          { "internalType": "address", "name": "user", "type": "address" }
+        ],
+        "name": "getReputation",
+        "outputs": [
+          { "internalType": "uint256", "name": "", "type": "uint256" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "inputs": [
+          { "internalType": "address", "name": "user", "type": "address" }
+        ],
+        "name": "getTasksCompleted",
+        "outputs": [
+          { "internalType": "uint256", "name": "", "type": "uint256" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
       }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "getTasksCompleted",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "reputation",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "tasksCompleted",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
-
-      "function submitProof(bytes32 proofHash) external",
-      "function getReputation(address) view returns (uint256)"
     ];
 
     let provider, signer, contract;
@@ -206,15 +144,21 @@
         provider = new ethers.providers.Web3Provider(window.ethereum);
         signer = provider.getSigner();
         contract = new ethers.Contract(contractAddress, contractABI, signer);
+
         const address = await signer.getAddress();
         document.getElementById("wallet").innerText = address;
 
         const rep = await contract.getReputation(address);
-        document.getElementById("reputation").innerText = rep.toString();
+        const completed = await contract.getTasksCompleted(address);
 
-        document.getElementById("rank").innerText = rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
+        document.getElementById("reputation").innerText = rep.toString();
+        document.getElementById("tasksCompleted").innerText = completed.toString();
+
+        document.getElementById("rank").innerText =
+          rep > 100 ? "Elite Node" :
+          rep > 10 ? "Pro Node" : "Rookie Node";
       } else {
-        alert("Please install MetaMask.");
+        alert("Please install MetaMask to connect.");
       }
     }
 
@@ -228,7 +172,6 @@
       const flat = result.flat().map(n => Math.round(n * 1000));
       const hashString = flat.join(",");
       const hashBytes = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
-
       document.getElementById("lastHash").innerText = hashBytes.slice(0, 16) + "...";
 
       try {
@@ -237,11 +180,17 @@
         alert("Proof submitted!");
 
         const rep = await contract.getReputation(await signer.getAddress());
+        const completed = await contract.getTasksCompleted(await signer.getAddress());
+
         document.getElementById("reputation").innerText = rep.toString();
-        document.getElementById("rank").innerText = rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
+        document.getElementById("tasksCompleted").innerText = completed.toString();
+
+        document.getElementById("rank").innerText =
+          rep > 100 ? "Elite Node" :
+          rep > 10 ? "Pro Node" : "Rookie Node";
       } catch (err) {
         console.error(err);
-        alert("Submission failed.");
+        alert("Submission failed. See console for error.");
       }
     }
 
