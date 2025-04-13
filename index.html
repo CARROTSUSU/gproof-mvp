@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>G-PROOF Node Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-PROOF: Full Node Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       background: radial-gradient(circle at top, #0f0f0f 0%, #000000 100%);
@@ -33,11 +33,11 @@
     }
     .dashboard {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 30px;
       margin-top: 50px;
       width: 90%;
-      max-width: 1000px;
+      max-width: 1200px;
     }
     .card {
       background-color: #111;
@@ -65,97 +65,83 @@
 </head>
 <body>
   <header>
-    <h1>G-PROOF: Node Dashboard</h1>
+    <h1>G-PROOF: Full Node Dashboard</h1>
   </header>
-
   <div class="dashboard">
     <div class="card">
       <h2>Node Info</h2>
       <p><strong>Address:</strong> <span id="wallet">Not connected</span></p>
       <p><strong>Reputation:</strong> <span id="reputation">0</span></p>
-      <p><strong>Rank:</strong> <span id="rank">Unranked</span></p>
+      <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
       <button onclick="connectWallet()">Connect Wallet</button>
     </div>
 
     <div class="card">
       <h2>GPU Task</h2>
       <canvas id="gpuCanvas" width="256" height="256"></canvas>
+      <p><strong>Task Input:</strong> <span id="taskInput">-</span></p>
       <p><strong>Last Hash:</strong> <span id="lastHash">N/A</span></p>
-      <button onclick="runTask()">Run GPU Task & Submit</button>
+      <button onclick="getTask()">Get Task</button>
+      <button onclick="runAndSubmit()">Run Task & Submit</button>
     </div>
 
     <div class="card">
-      <h2>Token Stats</h2>
-      <p><strong>$GPRF Reward:</strong> <span id="balance">0</span></p>
-      <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
-    </div>
-
-    <div class="card">
-      <h2>Node Status</h2>
-      <p>Status: <span style="color:lime">Active</span></p>
-      <p>Uptime: <span id="uptime">0h 0m</span></p>
+      <h2>Token & Rewards</h2>
+      <p><strong>$GPROOF Balance:</strong> <span id="balance">0</span></p>
+      <button onclick="claimReward()">Claim Rewards</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
-
   <script>
-    const contractAddress = "0xYourNewContractAddress"; // <-- Gantikan dengan smart contract address yang betul
-    const contractABI = [
-      {
-        "inputs": [{"internalType": "bytes32","name": "proofHash","type": "bytes32"}],
-        "name": "submitProof",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [{"internalType": "address","name": "user","type": "address"}],
-        "name": "getReputation",
-        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [{"internalType": "address","name": "user","type": "address"}],
-        "name": "getTasksCompleted",
-        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [{"internalType": "address","name": "user","type": "address"}],
-        "name": "getRewardBalance",
-        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
-        "stateMutability": "view",
-        "type": "function"
-      }
-    ];
+    // EDIT HERE: Replace with actual deployed contract addresses
+    const tokenAddress = "<GPROOF_TOKEN_ADDRESS>";
+    const coreAddress = "<GPROOF_CORE_ADDRESS>";
+    const taskManagerAddress = "<TASK_MANAGER_ADDRESS>";
+    const rewardManagerAddress = "<REWARD_MANAGER_ADDRESS>";
 
-    let provider, signer, contract;
+    // EDIT HERE: Replace with actual ABIs
+    const tokenABI = [...];
+    const coreABI = [...];
+    const taskManagerABI = [...];
+    const rewardManagerABI = [...];
+
+    let provider, signer;
+    let tokenContract, coreContract, taskContract, rewardContract;
 
     async function connectWallet() {
       if (window.ethereum) {
-        await ethereum.request({ method: "eth_requestAccounts" });
         provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
         signer = provider.getSigner();
-        contract = new ethers.Contract(contractAddress, contractABI, signer);
+
         const address = await signer.getAddress();
         document.getElementById("wallet").innerText = address;
 
-        const rep = await contract.getReputation(address);
-        const tasks = await contract.getTasksCompleted(address);
-        const reward = await contract.getRewardBalance(address);
+        tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
+        coreContract = new ethers.Contract(coreAddress, coreABI, signer);
+        taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
+        rewardContract = new ethers.Contract(rewardManagerAddress, rewardManagerABI, signer);
 
-        document.getElementById("reputation").innerText = rep.toString();
-        document.getElementById("tasksCompleted").innerText = tasks.toString();
-        document.getElementById("balance").innerText = reward.toString();
-        document.getElementById("rank").innerText =
-          rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
+        updateStats(address);
       } else {
-        alert("Please install MetaMask.");
+        alert("Please install MetaMask");
       }
+    }
+
+    async function updateStats(address) {
+      const rep = await coreContract.getReputation(address);
+      const completed = await coreContract.getTasksCompleted(address);
+      const balance = await tokenContract.balanceOf(address);
+      document.getElementById("reputation").innerText = rep;
+      document.getElementById("tasksCompleted").innerText = completed;
+      document.getElementById("balance").innerText = ethers.utils.formatEther(balance);
+    }
+
+    async function getTask() {
+      const input = await taskContract.getNextTask();
+      document.getElementById("taskInput").innerText = input.toString();
     }
 
     const gpu = new GPU();
@@ -163,42 +149,25 @@
       return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
     }).setOutput([256, 256]);
 
-    async function runTask() {
+    async function runAndSubmit() {
       const result = render();
       const flat = result.flat().map(n => Math.round(n * 1000));
       const hashString = flat.join(",");
-      const hashBytes = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
-      document.getElementById("lastHash").innerText = hashBytes.slice(0, 16) + "...";
+      const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(hashString));
+      document.getElementById("lastHash").innerText = hash.slice(0, 16) + "...";
 
-      try {
-        const tx = await contract.submitProof(hashBytes);
-        await tx.wait();
-        alert("Proof submitted!");
-
-        const address = await signer.getAddress();
-        const rep = await contract.getReputation(address);
-        const tasks = await contract.getTasksCompleted(address);
-        const reward = await contract.getRewardBalance(address);
-
-        document.getElementById("reputation").innerText = rep.toString();
-        document.getElementById("tasksCompleted").innerText = tasks.toString();
-        document.getElementById("balance").innerText = reward.toString();
-        document.getElementById("rank").innerText =
-          rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
-      } catch (err) {
-        console.error(err);
-        alert("Submission failed.");
-      }
+      const tx = await coreContract.submitProof(hash);
+      await tx.wait();
+      updateStats(await signer.getAddress());
+      alert("Proof submitted and reward triggered!");
     }
 
-    // Uptime counter
-    let seconds = 0;
-    setInterval(() => {
-      seconds++;
-      const h = Math.floor(seconds / 3600);
-      const m = Math.floor((seconds % 3600) / 60);
-      document.getElementById("uptime").innerText = `${h}h ${m}m`;
-    }, 1000);
+    async function claimReward() {
+      const tx = await rewardContract.claimReward();
+      await tx.wait();
+      alert("Reward claimed!");
+      updateStats(await signer.getAddress());
+    }
   </script>
 </body>
 </html>
