@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>G-PROOF Node Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     body {
       background: radial-gradient(circle at top, #0f0f0f 0%, #000000 100%);
@@ -15,6 +15,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       min-height: 100vh;
     }
     header {
@@ -85,7 +86,7 @@
 
     <div class="card">
       <h2>Token Stats</h2>
-      <p><strong>$GPROOF Balance:</strong> <span id="balance">0</span></p>
+      <p><strong>$GPRF Reward:</strong> <span id="balance">0</span></p>
       <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
     </div>
 
@@ -98,22 +99,37 @@
 
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
+
   <script>
-    const contractAddress = "0xA7E672Eb1b11d8Fa50D4B8f9D527405189C6C581";
+    const contractAddress = "0xYourNewContractAddress"; // <-- Gantikan dengan smart contract address yang betul
     const contractABI = [
       {
-        "inputs":[{"internalType":"bytes32","name":"proofHash","type":"bytes32"}],
-        "name":"submitProof","outputs":[],"stateMutability":"nonpayable","type":"function"
+        "inputs": [{"internalType": "bytes32","name": "proofHash","type": "bytes32"}],
+        "name": "submitProof",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
       },
       {
-        "inputs":[{"internalType":"address","name":"user","type":"address"}],
-        "name":"getReputation","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-        "stateMutability":"view","type":"function"
+        "inputs": [{"internalType": "address","name": "user","type": "address"}],
+        "name": "getReputation",
+        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
       },
       {
-        "inputs":[{"internalType":"address","name":"user","type":"address"}],
-        "name":"getTasksCompleted","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-        "stateMutability":"view","type":"function"
+        "inputs": [{"internalType": "address","name": "user","type": "address"}],
+        "name": "getTasksCompleted",
+        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [{"internalType": "address","name": "user","type": "address"}],
+        "name": "getRewardBalance",
+        "outputs": [{"internalType": "uint256","name": "","type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
       }
     ];
 
@@ -129,13 +145,16 @@
         document.getElementById("wallet").innerText = address;
 
         const rep = await contract.getReputation(address);
-        document.getElementById("reputation").innerText = rep.toString();
-        document.getElementById("rank").innerText = rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
-
         const tasks = await contract.getTasksCompleted(address);
+        const reward = await contract.getRewardBalance(address);
+
+        document.getElementById("reputation").innerText = rep.toString();
         document.getElementById("tasksCompleted").innerText = tasks.toString();
+        document.getElementById("balance").innerText = reward.toString();
+        document.getElementById("rank").innerText =
+          rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
       } else {
-        alert("Please install MetaMask!");
+        alert("Please install MetaMask.");
       }
     }
 
@@ -155,12 +174,17 @@
         const tx = await contract.submitProof(hashBytes);
         await tx.wait();
         alert("Proof submitted!");
+
         const address = await signer.getAddress();
         const rep = await contract.getReputation(address);
         const tasks = await contract.getTasksCompleted(address);
+        const reward = await contract.getRewardBalance(address);
+
         document.getElementById("reputation").innerText = rep.toString();
-        document.getElementById("rank").innerText = rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
         document.getElementById("tasksCompleted").innerText = tasks.toString();
+        document.getElementById("balance").innerText = reward.toString();
+        document.getElementById("rank").innerText =
+          rep > 100 ? "Elite Node" : rep > 10 ? "Pro Node" : "Rookie Node";
       } catch (err) {
         console.error(err);
         alert("Submission failed.");
