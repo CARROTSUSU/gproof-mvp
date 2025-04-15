@@ -328,7 +328,16 @@ async function stakeGPROOF() {
 
     const allowance = await tokenContract.allowance(signer.getAddress(), stakingAddress);
     if (allowance.lt(amountInWei)) {
-      const approveTx = await tokenContract.approve(stakingAddress, amountInWei);
+      async function updateStakingInfo() {
+  try {
+    const address = await signer.getAddress();
+    const staked = await stakingContract.stakedAmount(address);
+    document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
+  } catch (err) {
+    console.error("Failed to update staking info:", err);
+  }
+}
+      await tokenContract.approve(stakingAddress, amountInWei);
       await approveTx.wait();
     }
 
@@ -348,15 +357,13 @@ async function stakeGPROOF() {
 
 async function claimStakingReward() {
   try {
-  const tx = await stakingContract.claimReward();
-  await tx.wait();
-
-  alert("Reward claimed!");
-  updateStakingInfo();
-}
-  catch (error) {
-    console.error("Ralat semasa claim reward:", error);
-    alert("Gagal claim reward. Sila cuba lagi.");
+    const tx = await stakingContract.claimReward();
+    await tx.wait();
+    alert("Reward claimed successfully!");
+    updateStakingInfo();
+  } catch (err) {
+    console.error("Claim failed:", err);
+    alert("Failed to claim reward.");
   }
 }
     
@@ -370,14 +377,12 @@ function showTransactionLink(txHash) {
   }
 }
     async function updateStakingInfo() {
-      try {
-  const address = await signer.getAddress();
-  const staked = await stakingContract.getStakedAmount(address);
-  document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
-    }
-      catch (error) {
-    console.error("Ralat semasa updateStaking info:", error);
-    alert("Gagal updateStating info. Sila cuba lagi.");
+  try {
+    const address = await signer.getAddress();
+    const staked = await stakingContract.stakedAmount(address);
+    document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
+  } catch (err) {
+    console.error("Failed to update staking info:", err);
   }
 }
     setInterval(async () => {
