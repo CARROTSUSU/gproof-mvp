@@ -315,7 +315,7 @@ async function stakeGPROOF() {
   const amount = amountInput.value.trim();
 
   if (!amount || isNaN(amount) || Number(amount) <= 0) {
-    alert("Sila masukkan jumlah GPROOF yang sah untuk staking.");
+    alert("Sila masukkan jumlah GPROOF yang sah untuk stake.");
     return;
   }
 
@@ -324,7 +324,6 @@ async function stakeGPROOF() {
 
   try {
     const amountInWei = ethers.utils.parseEther(amount);
-
     const userAddress = await signer.getAddress();
     const allowance = await tokenContract.allowance(userAddress, stakingAddress);
 
