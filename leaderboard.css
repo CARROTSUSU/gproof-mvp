@@ -75,6 +75,24 @@ td {
   background: linear-gradient(45deg, #cd7f32, #b87333);
   color: #000;
 }
+.leaderboard {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  color: #00fff7;
+}
+
+.leaderboard th, .leaderboard td {
+  border: 1px solid #00fff7;
+  padding: 10px;
+  text-align: left;
+}
+
+.leaderboard th {
+  background-color: #111;
+}
+
 
 @media (max-width: 768px) {
   table {
