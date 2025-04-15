@@ -129,12 +129,14 @@
     const coreAddress = "<GPROOF_CORE_ADDRESS>";
     const taskManagerAddress = "<TASK_MANAGER_ADDRESS>";
     const rewardManagerAddress = "<REWARD_MANAGER_ADDRESS>";
+    const stakingAddress = "<GPROOF_STAKING_CONTRACT>";
 
     // EDIT HERE: Replace with actual ABIs
     const tokenABI = [...];
     const coreABI = [...];
     const taskManagerABI = [...];
     const rewardManagerABI = [...];
+    const stakingABI = [...];
 
     let provider, signer;
     let tokenContract, coreContract, taskContract, rewardContract;
@@ -281,19 +283,40 @@ setTimeout(() => {
 
   ctx.putImageData(imageData, 0, 0);
       }
-    const stakingAddress = "<GPROOF_STAKING_CONTRACT>";
-const stakingABI = [...]; // masukkan ABI dari kontrak di atas
 
 async function stakeGPROOF() {
   const amount = document.getElementById("stakeAmount").value;
-  const amountInWei = ethers.utils.parseEther(amount);
 
-  await tokenContract.approve(stakingAddress, amountInWei);
-  const tx = await stakingContract.stake(amountInWei);
-  await tx.wait();
+  if (!amount || isNaN(amount) || Number(amount) <= 0) {
+    alert("Please enter a valid amount to stake.");
+    return;
+  }
 
-  alert(`Successfully staked ${amount} GPROOF!`);
-  updateStakingInfo();
+  const stakeButton = document.getElementById("stakeBtn");
+  stakeButton.disabled = true;
+  stakeButton.innerText = "Staking...";
+
+  try {
+    const amountInWei = ethers.utils.parseEther(amount);
+
+    const allowance = await tokenContract.allowance(signer.getAddress(), stakingAddress);
+    if (allowance.lt(amountInWei)) {
+      const approveTx = await tokenContract.approve(stakingAddress, amountInWei);
+      await approveTx.wait();
+    }
+
+    const tx = await stakingContract.stake(amountInWei);
+    await tx.wait();
+
+    alert(`Successfully staked ${amount} GPROOF!`);
+    updateStakingInfo();
+  } catch (error) {
+    console.error("Stake error:", error);
+    alert("Failed to stake. See console for details.");
+  } finally {
+    stakeButton.disabled = false;
+    stakeButton.innerText = "Stake";
+  }
 }
 
 async function claimStakingReward() {
@@ -303,6 +326,7 @@ async function claimStakingReward() {
   alert("Reward claimed!");
   updateStakingInfo();
 }
+    
 function showTransactionLink(txHash) {
   const link = `https://sepolia.etherscan.io/tx/${txHash}`;
   const txWindow = window.open(link, '_blank');
@@ -317,6 +341,12 @@ function showTransactionLink(txHash) {
   const staked = await stakingContract.getStakedAmount(address);
   document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
     }
+    
+    setInterval(async () => {
+  const address = await signer.getAddress();
+  await updateStats(address);
+  await updateStakingInfo();
+}, 10000); // setiap 10 saat
     
     window.onload = async () => {
   const saved = localStorage.getItem("gproof_wallet");
