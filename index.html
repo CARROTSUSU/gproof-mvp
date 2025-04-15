@@ -295,8 +295,9 @@ async function exchangeToken() {
     alert("Gagal tukar token.");
   }
 }
-    
-    
+    window.addEventListener("load", () => {
+  connectWallet();
+});
     
     async function updateStats(address) {
       try {
