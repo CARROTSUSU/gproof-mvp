@@ -141,25 +141,26 @@
     let currentTaskInput = null;
 
     async function connectWallet() {
-      if (window.ethereum) {
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        signer = provider.getSigner();
+  if (window.ethereum) {
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
 
-        const address = await signer.getAddress();
-        document.getElementById("wallet").innerText = address;
+    const address = await signer.getAddress();
+    document.getElementById("wallet").innerText = address;
 
-        tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
-        coreContract = new ethers.Contract(coreAddress, coreABI, signer);
-        taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
-        rewardContract = new ethers.Contract(rewardManagerAddress, rewardManagerABI, signer);
+    tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
+    coreContract = new ethers.Contract(coreAddress, coreABI, signer);
+    taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
+    rewardContract = new ethers.Contract(rewardManagerAddress, rewardManagerABI, signer);
+    stakingContract = new ethers.Contract(stakingAddress, stakingABI, signer);
 
-        updateStats(address);
-      } else {
-        alert("Please install MetaMask");
-      }
-    }
-    
+    updateStats(address);
+    updateStakingInfo();
+  } else {
+    alert("Please install MetaMask");
+  }
+}
     async function exchangeToken() {
   const amount = document.getElementById("exchangeAmount").value;
   const token = document.getElementById("tokenSelect").value;
@@ -314,6 +315,14 @@ async function updateStakingInfo() {
   document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
     }
     
+    window.onload = async () => {
+  const saved = localStorage.getItem("gproof_wallet");
+  if (saved) {
+    document.getElementById("wallet").innerText = saved;
+    await connectWallet();
+  }
+};
+
   </script>
 </body>
 </html>
