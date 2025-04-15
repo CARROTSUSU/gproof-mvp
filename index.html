@@ -308,8 +308,16 @@ async function claimStakingReward() {
   alert("Reward claimed!");
   updateStakingInfo();
 }
-
-async function updateStakingInfo() {
+function showTransactionLink(txHash) {
+  const link = `https://sepolia.etherscan.io/tx/${txHash}`;
+  const txWindow = window.open(link, '_blank');
+  if (txWindow) {
+    txWindow.focus();
+  } else {
+    alert('Please allow popups for this website to view transaction details.');
+  }
+}
+    async function updateStakingInfo() {
   const address = await signer.getAddress();
   const staked = await stakingContract.getStakedAmount(address);
   document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
