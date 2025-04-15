@@ -331,10 +331,14 @@ setTimeout(() => {
 
   ctx.putImageData(imageData, 0, 0);
  }
-  setInterval(() => {
-  const result = render();
+  function animate() {
+  const result = render(t);
   drawToCanvas(result);
-}, 2000);
+  t += 0.03; // ubah masa untuk efek gelombang berubah
+  requestAnimationFrame(animate);
+}
+
+animate();
     
 async function stakeGPROOF() {
   const amountInput = document.getElementById("stakeAmount");
