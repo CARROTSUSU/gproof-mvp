@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPROOF Node Leaderboard</title>
+  <link rel="stylesheet" href="leaderboard.css" />
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>GPROOF NODE LEADERBOARD</h1>
+    <div class="filter">
+      <button onclick="setFilter('all')">All-Time</button>
+      <button onclick="setFilter('monthly')">Monthly</button>
+      <button onclick="setFilter('weekly')">Weekly</button>
+    </div>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Node Wallet</th>
+          <th>Tasks</th>
+          <th>REP</th>
+          <th>GPRF</th>
+          <th>Badge</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Data populated by JS -->
+      </tbody>
+    </table>
+  </div>
+  <script src="leaderboard.js"></script>
+</body>
+</html>
