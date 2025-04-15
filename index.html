@@ -89,7 +89,17 @@
       <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
       <button onclick="connectWallet()">Connect Wallet</button>
     </div>
+      <!-- Tab button -->
+<button onclick="showLeaderboard()">Leaderboard</button>
 
+<!-- Leaderboard Section -->
+<section id="leaderboardSection" style="display:none;">
+  <h2>GPROOF Node Leaderboard</h2>
+  <div id="leaderboard"></div>
+</section>
+      <link rel="stylesheet" href="leaderboard.css" />
+      <script src="leaderboard.js"></script>
+      
     <div class="card">
       <h2>GPU Task</h2>
       <canvas id="gpuCanvas" width="256" height="256"></canvas>
@@ -424,6 +434,11 @@ async function claimStakingReward() {
     console.error("Gagal dapatkan reputasi:", err);
     repScoreSpan.innerText = "Ralat";
   }
+    }
+
+    function showLeaderboard() {
+  document.getElementById("leaderboardSection").style.display = "block";
+  loadLeaderboard(); // fungsi dari leaderboard.js
     }
     
  
