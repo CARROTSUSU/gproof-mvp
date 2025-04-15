@@ -354,7 +354,15 @@ async function stakeGPROOF() {
     stakeButton.innerText = "Stake";
   }
 }
-
+    async function updateStakingInfo() {
+  try {
+    const address = await signer.getAddress();
+    const staked = await stakingContract.stakedAmount(address);
+    document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
+  } catch (err) {
+    console.error("Failed to update staking info:", err);
+  }
+       }
 async function claimStakingReward() {
   try {
     const tx = await stakingContract.claimReward();
@@ -376,15 +384,7 @@ function showTransactionLink(txHash) {
     alert("Transaction hash: " + txHash);
   }
 }
-    async function updateStakingInfo() {
-  try {
-    const address = await signer.getAddress();
-    const staked = await stakingContract.stakedAmount(address);
-    document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
-  } catch (err) {
-    console.error("Failed to update staking info:", err);
-  }
-}
+ 
     setInterval(async () => {
   const address = await signer.getAddress();
   await updateStats(address);
