@@ -1,0 +1,87 @@
+/* leaderboard.css */
+
+body {
+  background: radial-gradient(ellipse at center, #0a0f1a 0%, #000 100%);
+  font-family: 'Orbitron', sans-serif;
+  color: #00f7ff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  margin-top: 30px;
+  color: #00f7ff;
+  text-shadow: 0 0 10px #00f7ff;
+}
+
+table {
+  width: 90%;
+  margin: 40px auto;
+  border-collapse: collapse;
+  background: rgba(0, 10, 20, 0.8);
+  border: 1px solid #00f7ff;
+  box-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead {
+  background: rgba(0, 247, 255, 0.15);
+}
+
+thead th {
+  padding: 14px;
+  font-size: 1.1em;
+  border-bottom: 2px solid #00f7ff;
+  text-transform: uppercase;
+}
+
+tbody tr {
+  transition: background 0.3s ease;
+}
+
+tbody tr:hover {
+  background: rgba(0, 247, 255, 0.1);
+}
+
+td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 247, 255, 0.2);
+  color: #e0f7ff;
+}
+
+.rank-badge {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.gold {
+  background: linear-gradient(45deg, #ffd700, #ffb700);
+  color: #000;
+}
+
+.silver {
+  background: linear-gradient(45deg, #c0c0c0, #a0a0a0);
+  color: #000;
+}
+
+.bronze {
+  background: linear-gradient(45deg, #cd7f32, #b87333);
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 0.85em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+}
