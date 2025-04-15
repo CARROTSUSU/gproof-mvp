@@ -256,9 +256,14 @@ async function connectWallet() {
   }
 }
     const gpu = new GPU();
-    const render = gpu.createKernel(function () {
-      return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
-    }).setOutput([256, 256]);
+
+const render = gpu.createKernel(function () {
+  return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
+}).setOutput([256, 256]);
+
+const result = render(); // ini hasil 2D array dari GPU
+drawToCanvas(result);    // lukis ke atas canvas
+
 
     async function runAndSubmit() {
   if (!currentTaskInput) {
