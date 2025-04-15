@@ -120,10 +120,12 @@
   <h2>Token Exchanger</h2>
   <p><strong>Amount:</strong></p>
   <input type="number" id="exchangeAmount" placeholder="e.g. 10" style="width: 100%; padding: 8px;">
-  <select id="tokenSelect" style="width: 100%; padding: 8px; margin-top: 10px;">
-    <option value="USDT">USDT</option>
-    <option value="ETH">ETH</option>
-  </select>
+  <select id="tokenSelect">
+  <option value="ETH_TO_GPROOF">ETH → GPROOF</option>
+  <option value="GPROOF_TO_ETH">GPROOF → ETH</option>
+  <option value="GPROOF_TO_USDT">GPROOF → USDT</option>
+  <option value="USDT_TO_GPROOF">USDT → GPROOF</option>
+</select>
   <button onclick="exchangeToken()">Exchange</button>
 </div>
 
