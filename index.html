@@ -159,6 +159,32 @@
         alert("Please install MetaMask");
       }
     }
+    
+    async function exchangeToken() {
+  const amount = document.getElementById("exchangeAmount").value;
+  const token = document.getElementById("tokenSelect").value;
+
+  const amountIn = ethers.utils.parseUnits(amount, 18); // assuming 18 decimals
+
+  const routerAddress = "0x..."; // Uniswap/router address
+  const routerABI = [ /* insert here */ ];
+  const router = new ethers.Contract(routerAddress, routerABI, signer);
+
+  if (token === "ETH") {
+    const path = [WETH_ADDRESS, GPROOF_ADDRESS];
+    const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
+
+    const tx = await router.swapExactETHForTokens(
+      0, // min amountOut
+      path,
+      await signer.getAddress(),
+      deadline,
+      { value: amountIn }
+    );
+    await tx.wait();
+    alert("Swapped ETH to GPROOF!");
+  }
+    }
 
     async function updateStats(address) {
       const rep = await coreContract.getReputation(address);
