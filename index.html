@@ -139,6 +139,7 @@
     let provider, signer;
     let tokenContract, coreContract, taskContract, rewardContract;
     let currentTaskInput = null;
+    let stakingContract;
 
     async function connectWallet() {
   if (window.ethereum) {
@@ -148,7 +149,9 @@
 
     const address = await signer.getAddress();
     document.getElementById("wallet").innerText = address;
+    localStorage.setItem("gproof_wallet", address); // Simpan secara lokal
 
+    // Inisialisasi semua kontrak
     tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
     coreContract = new ethers.Contract(coreAddress, coreABI, signer);
     taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
@@ -280,14 +283,6 @@ setTimeout(() => {
       }
     const stakingAddress = "<GPROOF_STAKING_CONTRACT>";
 const stakingABI = [...]; // masukkan ABI dari kontrak di atas
-
-let stakingContract;
-
-async function connectWallet() {
-  // ...
-  stakingContract = new ethers.Contract(stakingAddress, stakingABI, signer);
-  // ...
-}
 
 async function stakeGPROOF() {
   const amount = document.getElementById("stakeAmount").value;
