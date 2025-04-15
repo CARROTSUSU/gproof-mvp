@@ -374,6 +374,19 @@ async function claimStakingReward() {
     alert("Failed to claim reward.");
   }
 }
+    async function claimStakingReward() {
+  try {
+    const tx = await stakingContract.claimReward();
+    await tx.wait();
+    alert("Staking reward claimed!");
+    await updateStakingInfo();
+    await updateStats(await signer.getAddress());
+  } catch (error) {
+    console.error("Claim Reward Error:", error);
+    alert("Failed to claim reward.");
+  }
+    }
+    
     
 function showTransactionLink(txHash) {
   const link = `https://sepolia.etherscan.io/tx/${txHash}`;
