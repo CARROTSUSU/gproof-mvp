@@ -146,35 +146,44 @@
     let tokenContract, coreContract, taskContract, rewardContract;
     let currentTaskInput = null;
     let stakingContract;
+    function connectWallet() {
+    let refreshInterval;
 
-    async function connectWallet() {
-      try {
-  if (window.ethereum) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
+async function connectWallet() {
+  try {
+    if (window.ethereum) {
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = provider.getSigner();
 
-    const address = await signer.getAddress();
-    document.getElementById("wallet").innerText = address;
-    localStorage.setItem("gproof_wallet", address); // Simpan secara lokal
+      const address = await signer.getAddress();
+      document.getElementById("wallet").innerText = address;
+      localStorage.setItem("gproof_wallet", address);
 
-    // Inisialisasi semua kontrak
-    tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
-    coreContract = new ethers.Contract(coreAddress, coreABI, signer);
-    taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
-    rewardContract = new ethers.Contract(rewardManagerAddress, rewardManagerABI, signer);
-    stakingContract = new ethers.Contract(stakingAddress, stakingABI, signer);
+      tokenContract = new ethers.Contract(tokenAddress, tokenABI, signer);
+      coreContract = new ethers.Contract(coreAddress, coreABI, signer);
+      taskContract = new ethers.Contract(taskManagerAddress, taskManagerABI, signer);
+      rewardContract = new ethers.Contract(rewardManagerAddress, rewardManagerABI, signer);
+      stakingContract = new ethers.Contract(stakingAddress, stakingABI, signer);
 
-    updateStats(address);
-    updateStakingInfo();
-  } else {
-    alert("Please install MetaMask");
-  }
- } catch (error) {
+      await updateStats(address);
+      await updateStakingInfo();
+
+      // Auto refresh setiap 15 saat
+      clearInterval(refreshInterval);
+      refreshInterval = setInterval(() => {
+        updateStats(address);
+        updateStakingInfo();
+      }, 15000);
+    } else {
+      alert("Please install MetaMask");
+    }
+  } catch (error) {
     console.error("Ralat semasa menyambung wallet:", error);
     alert("Gagal sambung wallet. Sila cuba lagi.");
   }
 }
+
     async function exchangeToken() {
       try {
   const amount = document.getElementById("exchangeAmount").value;
