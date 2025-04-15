@@ -65,6 +65,16 @@
   background-color: #00cccc;
   transform: scale(1.03);
     }
+    #reputationPanel {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(0, 128, 255, 0.1);
+  border: 1px solid #00f2ff;
+  border-radius: 12px;
+  color: #00f2ff;
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
+    }
+    
   </style>
   </head>
   <body>
@@ -114,6 +124,14 @@
   <button id="stakeBtn" onclick="stakeGPROOF()">Stake</button>
   <p><strong>Your Staked:</strong> <span id="stakedAmount">0</span></p>
   <button onclick="claimStakingReward()">Claim Reward</button>
+  
+  <!-- NODE REPUTATION PANEL -->
+<div class="glass-box" id="reputationPanel">
+  <h2>Reputasi Node</h2>
+  <p>Alamat Wallet: <span id="repAddress">Belum disambung</span></p>
+  <p>Skor Reputasi: <span id="repScore">-</span></p>
+</div>
+  
 </div>
       <ul class="website-list">
         <li><a href="https://www.example3.com" class="website-link" target="_blank">BUY RCIT</a></li>
@@ -165,6 +183,7 @@ async function connectWallet() {
 
       await updateStats(address);
       await updateStakingInfo();
+      await loadReputation();
 
       // Auto refresh setiap 15 saat
       clearInterval(refreshInterval);
@@ -379,6 +398,22 @@ async function claimStakingReward() {
     alert("Transaction hash: " + txHash);
   }
 }
+    async function loadReputation() {
+  const repAddressSpan = document.getElementById("repAddress");
+  const repScoreSpan = document.getElementById("repScore");
+
+  try {
+    const userAddress = await signer.getAddress();
+    repAddressSpan.innerText = userAddress;
+
+    const reputation = await gproofCoreContract.nodeReputation(userAddress);
+    repScoreSpan.innerText = reputation.toString();
+  } catch (err) {
+    console.error("Gagal dapatkan reputasi:", err);
+    repScoreSpan.innerText = "Ralat";
+  }
+    }
+    
  
     setInterval(async () => {
   const address = await signer.getAddress();
