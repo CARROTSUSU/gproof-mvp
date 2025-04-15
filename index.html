@@ -153,6 +153,8 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
+    import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js";
+    
     // EDIT HERE: Replace with actual deployed contract addresses
     const tokenAddress = "<GPROOF_TOKEN_ADDRESS>";
     const coreAddress = "<GPROOF_CORE_ADDRESS>";
@@ -209,37 +211,92 @@ async function connectWallet() {
   }
 }
 
-    async function exchangeToken() {
-      try {
+// Alamat penting
+const ROUTER_ADDRESS = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45"; // Uniswap V2 router for Sepolia (Contoh)
+const WETH_ADDRESS = "0xC02aaA39b223FE8D0a0e5C4F27eAD9083C756Cc2"; // WETH
+const GPROOF_ADDRESS = "0xYourGProofTokenAddress";
+const USDT_ADDRESS = "0xYourUSDTTokenAddress";
+
+// Masukkan ABI router (boleh ringkaskan untuk fungsi yang digunakan sahaja)
+const routerABI = [
+  "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) payable returns (uint[] memory)",
+  "function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) returns (uint[] memory)",
+  "function swapExactTokensForTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) returns (uint[] memory)",
+  "function getAmountsOut(uint amountIn, address[] memory path) view returns (uint[] memory amounts)"
+  ]
+
+async function exchangeToken() {
+  await setup();
   const amount = document.getElementById("exchangeAmount").value;
-  const token = document.getElementById("tokenSelect").value;
+  const direction = document.getElementById("tokenSelect").value;
+  const amountIn = ethers.utils.parseUnits(amount, 18);
+  const router = new ethers.Contract(ROUTER_ADDRESS, routerABI, signer);
+  const userAddress = await signer.getAddress();
+  const deadline = Math.floor(Date.now() / 1000) + 600; // 10 min
 
-  const amountIn = ethers.utils.parseUnits(amount, 18); // assuming 18 decimals
+  try {
+    if (direction === "ETH_TO_GPROOF") {
+      const path = [WETH_ADDRESS, GPROOF_ADDRESS];
+      const tx = await router.swapExactETHForTokens(
+        0,
+        path,
+        userAddress,
+        deadline,
+        { value: amountIn }
+      );
+      await tx.wait();
+      alert("Swapped ETH to GPROOF!");
 
-  const routerAddress = "0x..."; // Uniswap/router address
-  const routerABI = [ /* insert here */ ];
-  const router = new ethers.Contract(routerAddress, routerABI, signer);
+    } else if (direction === "GPROOF_TO_ETH") {
+      const path = [GPROOF_ADDRESS, WETH_ADDRESS];
+      const token = new ethers.Contract(GPROOF_ADDRESS, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
+      await token.approve(ROUTER_ADDRESS, amountIn);
+      const tx = await router.swapExactTokensForETH(
+        amountIn,
+        0,
+        path,
+        userAddress,
+        deadline
+      );
+      await tx.wait();
+      alert("Swapped GPROOF to ETH!");
 
-  if (token === "ETH") {
-    const path = [WETH_ADDRESS, GPROOF_ADDRESS];
-    const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
+    } else if (direction === "GPROOF_TO_USDT") {
+      const path = [GPROOF_ADDRESS, USDT_ADDRESS];
+      const token = new ethers.Contract(GPROOF_ADDRESS, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
+      await token.approve(ROUTER_ADDRESS, amountIn);
+      const tx = await router.swapExactTokensForTokens(
+        amountIn,
+        0,
+        path,
+        userAddress,
+        deadline
+      );
+      await tx.wait();
+      alert("Swapped GPROOF to USDT!");
 
-    const tx = await router.swapExactETHForTokens(
-      0, // min amountOut
-      path,
-      await signer.getAddress(),
-      deadline,
-      { value: amountIn }
-    );
-    await tx.wait();
-    alert("Swapped ETH to GPROOF!");
-  }
-    } catch (error) {
-    console.error("Ralat semasa exchange Token:", error);
-    alert("Gagal exchange token. Sila cuba lagi.");
+    } else if (direction === "USDT_TO_GPROOF") {
+      const path = [USDT_ADDRESS, GPROOF_ADDRESS];
+      const token = new ethers.Contract(USDT_ADDRESS, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
+      await token.approve(ROUTER_ADDRESS, amountIn);
+      const tx = await router.swapExactTokensForTokens(
+        amountIn,
+        0,
+        path,
+        userAddress,
+        deadline
+      );
+      await tx.wait();
+      alert("Swapped USDT to GPROOF!");
+    }
+  } catch (error) {
+    console.error("Ralat semasa exchange:", error);
+    alert("Gagal tukar token.");
   }
 }
-
+    
+    
+    
     async function updateStats(address) {
       try {
       const rep = await coreContract.getReputation(address);
