@@ -148,6 +148,7 @@
     let stakingContract;
 
     async function connectWallet() {
+      try {
   if (window.ethereum) {
     provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
@@ -169,8 +170,13 @@
   } else {
     alert("Please install MetaMask");
   }
+ } catch (error) {
+    console.error("Ralat semasa menyambung wallet:", error);
+    alert("Gagal sambung wallet. Sila cuba lagi.");
+  }
 }
     async function exchangeToken() {
+      try {
   const amount = document.getElementById("exchangeAmount").value;
   const token = document.getElementById("tokenSelect").value;
 
@@ -194,9 +200,14 @@
     await tx.wait();
     alert("Swapped ETH to GPROOF!");
   }
-    }
+    } catch (error) {
+    console.error("Ralat semasa exchange Token:", error);
+    alert("Gagal exchange token. Sila cuba lagi.");
+  }
+}
 
     async function updateStats(address) {
+      try {
       const rep = await coreContract.getReputation(address);
       const completed = await coreContract.getTasksCompleted(address);
       const balance = await tokenContract.balanceOf(address);
@@ -204,18 +215,22 @@
       document.getElementById("tasksCompleted").innerText = completed;
       document.getElementById("balance").innerText = ethers.utils.formatEther(balance);
     }
+     } catch (error) {
+    console.error("Ralat semasa updatestats:", error);
+    alert("Gagal updatestats. Sila cuba lagi.");
+  }
+}
 
     async function getTask() {
   try {
     const input = await taskContract.getNextTask();
     currentTaskInput = input;
     document.getElementById("taskInput").innerText = input.toString();
-  } catch (err) {
-    alert("Failed to get task.");
-    console.error(err);
-  }
-    }
-    
+   } catch (error) {
+    console.error("Ralat semasa mendapatkan task:", error);
+    alert("Gagal sambung task. Sila cuba lagi.");
+  }
+}
     const gpu = new GPU();
     const render = gpu.createKernel(function () {
       return Math.sin(this.thread.x * 0.1) * Math.cos(this.thread.y * 0.1);
@@ -324,11 +339,17 @@ async function stakeGPROOF() {
 }
 
 async function claimStakingReward() {
+  try {
   const tx = await stakingContract.claimReward();
   await tx.wait();
 
   alert("Reward claimed!");
   updateStakingInfo();
+}
+  catch (error) {
+    console.error("Ralat semasa claim reward:", error);
+    alert("Gagal claim reward. Sila cuba lagi.");
+  }
 }
     
 function showTransactionLink(txHash) {
@@ -341,11 +362,16 @@ function showTransactionLink(txHash) {
   }
 }
     async function updateStakingInfo() {
+      try {
   const address = await signer.getAddress();
   const staked = await stakingContract.getStakedAmount(address);
   document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
     }
-    
+      catch (error) {
+    console.error("Ralat semasa updateStaking info:", error);
+    alert("Gagal updateStating info. Sila cuba lagi.");
+  }
+}
     setInterval(async () => {
   const address = await signer.getAddress();
   await updateStats(address);
