@@ -331,6 +331,10 @@ setTimeout(() => {
 
   ctx.putImageData(imageData, 0, 0);
  }
+  setInterval(() => {
+  const result = render();
+  drawToCanvas(result);
+}, 2000);
     
 async function stakeGPROOF() {
   const amountInput = document.getElementById("stakeAmount");
