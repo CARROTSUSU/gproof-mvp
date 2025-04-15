@@ -326,69 +326,51 @@ async function stakeGPROOF() {
   try {
     const amountInWei = ethers.utils.parseEther(amount);
 
-    const allowance = await tokenContract.allowance(signer.getAddress(), stakingAddress);
+        const allowance = await tokenContract.allowance(await signer.getAddress(), stakingAddress);
     if (allowance.lt(amountInWei)) {
-      async function updateStakingInfo() {
-  try {
-    const address = await signer.getAddress();
-    const staked = await stakingContract.stakedAmount(address);
-    document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
-  } catch (err) {
-    console.error("Failed to update staking info:", err);
-  }
-}
-      await tokenContract.approve(stakingAddress, amountInWei);
+      const approveTx = await tokenContract.approve(stakingAddress, amountInWei);
       await approveTx.wait();
     }
 
     const tx = await stakingContract.stake(amountInWei);
     await tx.wait();
 
-    alert(`Successfully staked ${amount} GPROOF!`);
-    updateStakingInfo();
+    alert("Successfully staked!");
+    document.getElementById("stakeAmount").value = "";
+    await updateStakingInfo();
+
   } catch (error) {
-    console.error("Stake error:", error);
-    alert("Failed to stake. See console for details.");
+    console.error("Error while staking:", error);
+    alert("Failed to stake. Please try again.");
   } finally {
     stakeButton.disabled = false;
     stakeButton.innerText = "Stake";
   }
 }
-    async function updateStakingInfo() {
+
+async function updateStakingInfo() {
   try {
     const address = await signer.getAddress();
     const staked = await stakingContract.stakedAmount(address);
     document.getElementById("stakedAmount").innerText = ethers.utils.formatEther(staked);
   } catch (err) {
-    console.error("Failed to update staking info:", err);
+    console.error("Error updating staking info:", err);
   }
-       }
+}
+
 async function claimStakingReward() {
   try {
     const tx = await stakingContract.claimReward();
     await tx.wait();
-    alert("Reward claimed successfully!");
-    updateStakingInfo();
+    alert("Reward claimed!");
+    await updateStats(await signer.getAddress());
   } catch (err) {
-    console.error("Claim failed:", err);
+    console.error("Error claiming reward:", err);
     alert("Failed to claim reward.");
   }
 }
-    async function claimStakingReward() {
-  try {
-    const tx = await stakingContract.claimReward();
-    await tx.wait();
-    alert("Staking reward claimed!");
-    await updateStakingInfo();
-    await updateStats(await signer.getAddress());
-  } catch (error) {
-    console.error("Claim Reward Error:", error);
-    alert("Failed to claim reward.");
-  }
-    }
-    
-    
-function showTransactionLink(txHash) {
+
+    function showTransactionLink(txHash) {
   const link = `https://sepolia.etherscan.io/tx/${txHash}`;
   const txWindow = window.open(link, '_blank');
   if (txWindow) {
