@@ -310,45 +310,48 @@ setTimeout(() => {
 
   ctx.putImageData(imageData, 0, 0);
       }
-
+    
 async function stakeGPROOF() {
-  const amount = document.getElementById("stakeAmount").value;
+  const amountInput = document.getElementById("stakeAmount");
+  const stakeButton = document.getElementById("stakeBtn");
+  const amount = amountInput.value.trim();
 
   if (!amount || isNaN(amount) || Number(amount) <= 0) {
-    alert("Please enter a valid amount to stake.");
+    alert("Sila masukkan jumlah GPROOF yang sah untuk staking.");
     return;
   }
 
-  const stakeButton = document.getElementById("stakeBtn");
   stakeButton.disabled = true;
   stakeButton.innerText = "Staking...";
 
   try {
     const amountInWei = ethers.utils.parseEther(amount);
 
-        const allowance = await tokenContract.allowance(await signer.getAddress(), stakingAddress);
+    const userAddress = await signer.getAddress();
+    const allowance = await tokenContract.allowance(userAddress, stakingAddress);
+
     if (allowance.lt(amountInWei)) {
       const approveTx = await tokenContract.approve(stakingAddress, amountInWei);
       await approveTx.wait();
     }
 
-    const tx = await stakingContract.stake(amountInWei);
-    await tx.wait();
+    const stakeTx = await stakingContract.stake(amountInWei);
+    await stakeTx.wait();
 
-    alert("Successfully staked!");
-    document.getElementById("stakeAmount").value = "";
+    alert("Berjaya stake GPROOF!");
+    amountInput.value = "";
     await updateStakingInfo();
 
   } catch (error) {
-    console.error("Error while staking:", error);
-    alert("Failed to stake. Please try again.");
+    console.error("Ralat semasa staking:", error);
+    alert("Gagal untuk stake. Sila cuba lagi atau semak sambungan wallet.");
   } finally {
     stakeButton.disabled = false;
     stakeButton.innerText = "Stake";
   }
 }
-
-async function updateStakingInfo() {
+    
+    async function updateStakingInfo() {
   try {
     const address = await signer.getAddress();
     const staked = await stakingContract.stakedAmount(address);
