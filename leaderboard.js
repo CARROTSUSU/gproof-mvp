@@ -25,6 +25,7 @@ async function connectWallet() {
     alert("Please install MetaMask!");
   }
 }
+
 async function calculateTaskReward() {
     try {
         // Ambil alamat pengguna semasa
@@ -64,6 +65,22 @@ function getTier(reputation) {
   return { name: "Bronze", reward: 10 };
 }
 
+async function detectUserTier() {
+  Try {
+  const accounts = await web3.eth.getAccounts();
+  const userAddress = accounts[0];
+
+  const rep = await coreContract.methods.getReputation(userAddress).call();
+  const tier = getTier(parseInt(rep));
+
+  document.getElementById("tierName").innerText = tier.name;
+  document.getElementById("tierReward").innerText = `${tier.reward}`;
+} catch (err) {
+    console.error("Failed to load leaderboard:", err);
+  }
+}
+
+
 async function loadLeaderboard() {
   try {
     const totalNodes = await coreContract.methods.getNodeCount().call();
@@ -83,8 +100,7 @@ async function loadLeaderboard() {
         tasks: parseInt(tasks),
         gprf
       });
-    }
-
+      
     nodes.sort((a, b) => b.reputation - a.reputation); // Ikut REP tertinggi
 
     const tbody = document.querySelector("#leaderboard-body");
@@ -136,7 +152,7 @@ async function loadLeaderboard() {
 
       tbody.appendChild(row);
     });
-
+      await detectUserTier();
   } catch (err) {
     console.error("Failed to load leaderboard:", err);
   }
