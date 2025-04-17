@@ -235,33 +235,40 @@ audio {
     let refreshInterval;
     let walletAddress;
 
-  // Inisialisasi WalletConnect provider
-  async function connectWalletConnect() {
-      provider = new WalletConnectProvider.default({
+  // Inisialisasi WalletConnect provider untuk Mainnet
+async function connectWalletConnect() {
+    // Setup WalletConnect Provider untuk Mainnet Ethereum
+    const provider = new WalletConnectProvider({
         rpc: {
-          11155111: "https://sepolia.infura.io/v3/YOUR_INFURA_ID"
+            1: "https://mainnet.infura.io/v3/YOUR_INFURA_ID"  // RPC untuk Ethereum Mainnet
         },
-        chainId: 11155111
-      });
+        chainId: 1  // Chain ID untuk Ethereum Mainnet
+    });
 
-      try {
+    try {
+        // Enable WalletConnect
         await provider.enable();
-        web3 = new Web3(provider);
+
+        // Setup Web3 dengan provider WalletConnect
+        const web3 = new Web3(provider);
+
+        // Ambil alamat wallet yang disambungkan
         const accounts = await web3.eth.getAccounts();
-        walletAddress = accounts[0];
+        const walletAddress = accounts[0];
         document.getElementById("wallet-address").innerText = "Wallet: " + walletAddress;
 
-        // Contoh interaksi: instantiate contract
+        // Instantiate kontrak dengan ABI dan alamat kontrak
         const gproof = new web3.eth.Contract(contractABI, contractAddress);
 
-        // Contoh fungsi (misalnya get reputation)
+        // Contoh interaksi: dapatkan reputasi dari kontrak
         const rep = await gproof.methods.getReputation(walletAddress).call();
         console.log("Reputation:", rep);
 
-      } catch (err) {
+    } catch (err) {
         console.error("Connection error:", err);
-      }
+        // Tambah notifikasi atau pengendalian error lain
     }
+}
     
     async function connectWallet() {
   try {
@@ -551,6 +558,24 @@ async function stakeGPROOF() {
     stakeButton.innerText = "Stake";
   }
 }
+    async function submitProof() {
+    const proofHash = "0x123abc...";  // Hash bukti penyelesaian tugas
+    const timestamp = Math.floor(Date.now() / 1000);  // Timestamp semasa
+
+    try {
+        const accounts = await web3.eth.getAccounts();
+        const walletAddress = accounts[0];
+
+        const gproof = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Menyerahkan bukti ke smart contract
+        await gproof.methods.submitProof(proofHash, timestamp).send({ from: walletAddress });
+
+        console.log("Proof submitted successfully!");
+    } catch (err) {
+        console.error("Error submitting proof:", err);
+    }
+    }
     
     async function updateStakingInfo() {
   try {
