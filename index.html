@@ -89,17 +89,23 @@ audio {
 }
 
 .music-control button {
-  background: rgba(0, 255, 255, 0.1);
+  font-size: 24px;
+  background: #111;
   color: #0ff;
-  border: 2px solid #0ff;
+  border: none;
+  padding: 10px;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
+  box-shadow: 0 0 10px #0ff;
   cursor: pointer;
-  box-shadow: 0 0 15px #0ff;
-  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
 }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px #0ff; }
+  50% { box-shadow: 0 0 20px #0ff; }
+  100% { box-shadow: 0 0 10px #0ff; }
+}
+
 
 .music-control button:hover {
   background: rgba(0, 255, 255, 0.3);
@@ -426,23 +432,20 @@ setTimeout(() => {
   }
 }
     const music = document.getElementById("background-music");
-    window.addEventListener('click', () => {
-  const music = document.getElementById("background-music");
-  music.volume = 1.0;
-  music.play().catch((e) => {
-    console.log("Autoplay blocked:", e);
-  });
+document.addEventListener("click", function () {
+  if (music.paused) {
+    music.volume = 1.0;
+    music.play().catch(e => console.log("Autoplay blocked:", e));
+  }
 }, { once: true });
-    function toggleMusic() {
-  const music = document.getElementById("background-music");
+
+function toggleMusic() {
   if (music.paused) {
     music.play();
   } else {
     music.pause();
   }
 }
-
-    }
     
     function drawToCanvas(result) {
   const canvas = document.getElementById("gpuCanvas");
