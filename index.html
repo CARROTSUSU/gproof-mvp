@@ -200,15 +200,6 @@ audio {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
     
-  function toggleMusic() {
-    var music = document.getElementById("background-music");
-    if (music.paused) {
-      music.play();
-    } else {
-      music.pause();
-    }
-  }
-    
     // EDIT HERE: Replace with actual deployed contract addresses
     const tokenAddress = "<GPROOF_TOKEN_ADDRESS>";
     const coreAddress = "<GPROOF_CORE_ADDRESS>";
@@ -431,6 +422,15 @@ setTimeout(() => {
     console.error(err);
   }
 }
+    function toggleMusic() {
+  const music = document.getElementById("background-music");
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+  }
+    }
+    
     function drawToCanvas(result) {
   const canvas = document.getElementById("gpuCanvas");
   const ctx = canvas.getContext("2d");
