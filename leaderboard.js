@@ -57,6 +57,13 @@ async function calculateTaskReward() {
     }
 }
 
+function getTier(reputation) {
+  if (reputation >= 600) return { name: "Quantum", reward: 50 };
+  if (reputation >= 300) return { name: "Gold", reward: 35 };
+  if (reputation >= 100) return { name: "Silver", reward: 20 };
+  return { name: "Bronze", reward: 10 };
+}
+
 async function loadLeaderboard() {
   try {
     const totalNodes = await coreContract.methods.getNodeCount().call();
