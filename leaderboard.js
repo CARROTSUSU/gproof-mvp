@@ -25,6 +25,37 @@ async function connectWallet() {
     alert("Please install MetaMask!");
   }
 }
+async function calculateTaskReward() {
+    try {
+        // Ambil alamat pengguna semasa
+        const userAddress = await ethereum.request({ method: 'eth_requestAccounts' });
+
+        // Ambil kontrak pintar (contoh: GPROOFCore)
+        const contract = new ethers.Contract(
+            "0xA7E672Eb1b11d8Fa50D4B8f9D527405189C6C581", // GPROOFCore address (semasa)
+            ["function getReputation(address user) public view returns (uint256)",
+             "function getTasksCompleted(address user) public view returns (uint256)"], // ABI
+            provider
+        );
+
+        // Ambil reputasi dan jumlah tugas yang diselesaikan
+        const reputation = await contract.getReputation(userAddress[0]);
+        const tasksCompleted = await contract.getTasksCompleted(userAddress[0]);
+
+        // Log nilai untuk debug
+        console.log(`Reputasi: ${reputation}`);
+        console.log(`Tugas Diselesaikan: ${tasksCompleted}`);
+
+        // Logik untuk mengira ganjaran (contoh)
+        const reward = tasksCompleted * 10 + reputation * 2; // Contoh logik ganjaran
+
+        // Kemas kini UI untuk memaparkan ganjaran
+        document.getElementById("calculatedReward").innerText = `${reward} GPROOF`;
+
+    } catch (error) {
+        console.error("Ralat semasa mengira ganjaran:", error);
+    }
+}
 
 async function loadLeaderboard() {
   try {
