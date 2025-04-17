@@ -1,5 +1,4 @@
-/* leaderboard.css */
-
+/* Global styles */
 body {
   background: radial-gradient(ellipse at center, #0a0f1a 0%, #000 100%);
   font-family: 'Orbitron', sans-serif;
@@ -15,8 +14,83 @@ h1 {
   margin-top: 30px;
   color: #00f7ff;
   text-shadow: 0 0 10px #00f7ff;
+  animation: slideInUp 1s ease-out;
 }
 
+@keyframes slideInUp {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Filter buttons */
+.filter {
+  text-align: center;
+  margin: 20px;
+}
+
+.filter button {
+  background-color: #00f7ff;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  margin: 0 10px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.2);
+}
+
+.filter button:hover {
+  background-color: #00ccff;
+}
+
+/* Reward panel */
+.reward-panel {
+  background: rgba(0, 247, 255, 0.1);
+  border: 1px solid #00f7ff;
+  border-radius: 12px;
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  color: #00f7ff;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.reward-panel h2 {
+  margin: 0;
+  font-size: 1.5em;
+  text-shadow: 0 0 5px #00f7ff;
+  animation: highlight 2s ease-in-out infinite alternate;
+}
+
+@keyframes highlight {
+  0% {
+    color: #00f7ff;
+    text-shadow: 0 0 10px #00f7ff;
+  }
+  100% {
+    color: #ffcc00;
+    text-shadow: 0 0 15px #ffcc00, 0 0 30px #ffcc00;
+  }
+}
+
+/* Leaderboard table */
 table {
   width: 90%;
   margin: 40px auto;
@@ -41,10 +115,26 @@ thead th {
 
 tbody tr {
   transition: background 0.3s ease;
+  opacity: 0;
+  animation: slideIn 0.5s ease-out forwards;
 }
 
-tbody tr:hover {
-  background: rgba(0, 247, 255, 0.1);
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+tbody tr:nth-child(even) {
+  animation-delay: 0.3s;
+}
+
+tbody tr:nth-child(odd) {
+  animation-delay: 0.6s;
 }
 
 td {
@@ -75,28 +165,6 @@ td {
   background: linear-gradient(45deg, #cd7f32, #b87333);
   color: #000;
 }
-.reward-panel {
-  background: rgba(0, 247, 255, 0.1);
-  border: 1px solid #00f7ff;
-  border-radius: 12px;
-  width: 90%;
-  margin: 20px auto;
-  padding: 20px;
-  color: #00f7ff;
-  text-align: center;
-  box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
-}
-
-.reward-panel h2 {
-  margin: 0;
-  font-size: 1.5em;
-  text-shadow: 0 0 5px #00f7ff;
-}
-
-.reward-panel p {
-  margin: 10px 0 0;
-  font-size: 1.2em;
-}
 
 .leaderboard {
   width: 100%;
@@ -115,7 +183,6 @@ td {
 .leaderboard th {
   background-color: #111;
 }
-
 
 @media (max-width: 768px) {
   table {
