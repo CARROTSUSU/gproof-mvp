@@ -79,7 +79,11 @@
   </style>
   </head>
   <body>
-    <audio id="bg-music" src="bg-music.mp3" preload="auto" loop></audio>
+    <audio id="background-music" autoplay loop>
+  <source src="path_to_your_music.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+    
   <header>
     <h1>G-PROOF: Full Node Dashboard</h1>
   </header>
@@ -164,6 +168,18 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
+    <button onclick="toggleMusic()">Toggle Music</button>
+      <button onclick="toggleMusic()">Toggle Music</button>
+
+<script>
+  function toggleMusic() {
+    var music = document.getElementById("background-music");
+    if (music.paused) {
+      music.play();
+    } else {
+      music.pause();
+    }
+  }
     
     // EDIT HERE: Replace with actual deployed contract addresses
     const tokenAddress = "<GPROOF_TOKEN_ADDRESS>";
