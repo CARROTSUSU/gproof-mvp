@@ -431,10 +431,11 @@ setTimeout(() => {
   }
 }
     const music = document.getElementById("background-music");
+
 document.addEventListener("click", function () {
   if (music.paused) {
     music.volume = 1.0;
-    music.play().catch(e => console.log("Autoplay blocked:", e));
+    music.play().catch(err => console.log("Autoplay blocked:", err));
   }
 }, { once: true });
 
