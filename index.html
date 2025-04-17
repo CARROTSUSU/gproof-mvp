@@ -83,34 +83,33 @@ audio {
 /* Music toggle button style */
 .music-control {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .music-control button {
-  font-size: 24px;
+  font-size: 20px;
   background: #111;
   color: #0ff;
   border: none;
-  padding: 10px;
+  padding: 10px 14px;
   border-radius: 50%;
   box-shadow: 0 0 10px #0ff;
   cursor: pointer;
-  animation: pulse 2s infinite;
+  transition: 0.3s;
 }
-
+.music-control button:hover {
+  background: #0ff;
+  color: #000;
+}
+ 
 @keyframes pulse {
   0% { box-shadow: 0 0 10px #0ff; }
   50% { box-shadow: 0 0 20px #0ff; }
   100% { box-shadow: 0 0 10px #0ff; }
 }
 
-
-.music-control button:hover {
-  background: rgba(0, 255, 255, 0.3);
-}
-    
   </style>
   </head>
   <body>
