@@ -127,7 +127,10 @@ audio {
       <p><strong>Reputation:</strong> <span id="reputation">0</span></p>
       <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
       <button onclick="connectWallet()">Connect Wallet</button>
+      <button onclick="connectWalletConnect()">Connect via WalletConnect</button>
+<p id="wallet-address"></p>
     </div>
+      
       <!-- Tab button -->
 <button onclick="showLeaderboard()">Leaderboard</button>
 <div class="music-control">
@@ -203,6 +206,11 @@ audio {
 
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
+      <!-- WalletConnect Provider -->
+<script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+      <!-- Web3.js -->
+<script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
+
   <script>
     
     // EDIT HERE: Replace with actual deployed contract addresses
@@ -219,13 +227,43 @@ audio {
     const rewardManagerABI = [...];
     const stakingABI = [...];
 
+    let web3;
     let provider, signer;
     let tokenContract, coreContract, taskContract, rewardContract;
     let currentTaskInput = null;
     let stakingContract;
     let refreshInterval;
+    let walletAddress;
 
-async function connectWallet() {
+  // Inisialisasi WalletConnect provider
+  async function connectWalletConnect() {
+      provider = new WalletConnectProvider.default({
+        rpc: {
+          11155111: "https://sepolia.infura.io/v3/YOUR_INFURA_ID"
+        },
+        chainId: 11155111
+      });
+
+      try {
+        await provider.enable();
+        web3 = new Web3(provider);
+        const accounts = await web3.eth.getAccounts();
+        walletAddress = accounts[0];
+        document.getElementById("wallet-address").innerText = "Wallet: " + walletAddress;
+
+        // Contoh interaksi: instantiate contract
+        const gproof = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Contoh fungsi (misalnya get reputation)
+        const rep = await gproof.methods.getReputation(walletAddress).call();
+        console.log("Reputation:", rep);
+
+      } catch (err) {
+        console.error("Connection error:", err);
+      }
+    }
+    
+    async function connectWallet() {
   try {
     if (window.ethereum) {
       provider = new ethers.providers.Web3Provider(window.ethereum);
