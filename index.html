@@ -425,6 +425,13 @@ setTimeout(() => {
     console.error(err);
   }
 }
+    window.addEventListener('click', () => {
+  const music = document.getElementById("background-music");
+  music.volume = 1.0;
+  music.play().catch((e) => {
+    console.log("Autoplay blocked:", e);
+  });
+}, { once: true });
     function toggleMusic() {
   const music = document.getElementById("background-music");
   if (music.paused) {
