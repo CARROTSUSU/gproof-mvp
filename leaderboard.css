@@ -75,6 +75,29 @@ td {
   background: linear-gradient(45deg, #cd7f32, #b87333);
   color: #000;
 }
+.reward-panel {
+  background: rgba(0, 247, 255, 0.1);
+  border: 1px solid #00f7ff;
+  border-radius: 12px;
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  color: #00f7ff;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+}
+
+.reward-panel h2 {
+  margin: 0;
+  font-size: 1.5em;
+  text-shadow: 0 0 5px #00f7ff;
+}
+
+.reward-panel p {
+  margin: 10px 0 0;
+  font-size: 1.2em;
+}
+
 .leaderboard {
   width: 100%;
   max-width: 800px;
