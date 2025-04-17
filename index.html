@@ -97,7 +97,7 @@
     </div>
       <!-- Tab button -->
 <button onclick="showLeaderboard()">Leaderboard</button>
-
+<button onclick="toggleMusic()">Toggle Music</button>
 <!-- Leaderboard Section -->
 <section id="leaderboardSection" style="display:none;">
   <h2>GPROOF Node Leaderboard</h2>
@@ -168,10 +168,7 @@
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gpu.js/2.11.0/gpu.min.js"></script>
   <script>
-    <button onclick="toggleMusic()">Toggle Music</button>
-      <button onclick="toggleMusic()">Toggle Music</button>
-
-<script>
+    
   function toggleMusic() {
     var music = document.getElementById("background-music");
     if (music.paused) {
