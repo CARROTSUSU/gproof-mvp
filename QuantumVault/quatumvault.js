@@ -1,6 +1,6 @@
-// Import Web3 and contract ABI
+// Import Web3 dan ABI kontrak pintar
 const Web3 = require("web3");
-const web3 = new Web3(window.ethereum); // Assuming MetaMask or another web3 provider is injected
+const web3 = new Web3(window.ethereum); // Anggap MetaMask atau penyedia web3 lain disuntik
 
 const quantumVaultABI = [ /* ABI dari QuantumVault.sol */ ];
 const stakingContractABI = [ /* ABI dari Staking Contract */ ];
@@ -14,7 +14,7 @@ const quantumVault = new web3.eth.Contract(quantumVaultABI, quantumVaultAddress)
 const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
 const rewardToken = new web3.eth.Contract(rewardTokenABI, rewardTokenAddress);
 
-// Function untuk memeriksa status akses Vault
+// Fungsi untuk memeriksa status akses Vault
 async function checkVaultAccess(userAddress) {
   try {
     const hasAccessed = await quantumVault.methods.hasAccessedVault(userAddress).call();
@@ -28,7 +28,7 @@ async function checkVaultAccess(userAddress) {
   }
 }
 
-// Function untuk mengakses Vault
+// Fungsi untuk mengakses Vault
 async function accessQuantumVault() {
   const accounts = await web3.eth.requestAccounts();
   const userAddress = accounts[0];
@@ -41,7 +41,7 @@ async function accessQuantumVault() {
   }
 }
 
-// Function untuk mengklaim ganjaran
+// Fungsi untuk mengklaim ganjaran
 async function claimReward(amount) {
   const accounts = await web3.eth.requestAccounts();
   const userAddress = accounts[0];
@@ -54,7 +54,7 @@ async function claimReward(amount) {
   }
 }
 
-// Function untuk menambah dana ke Vault (Only Owner)
+// Fungsi untuk menambah dana ke Vault (Only Owner)
 async function addFundsToVault(amount) {
   const accounts = await web3.eth.requestAccounts();
   const ownerAddress = accounts[0];
@@ -67,7 +67,7 @@ async function addFundsToVault(amount) {
   }
 }
 
-// Function untuk mengambil dana dari Vault (Only Owner)
+// Fungsi untuk mengambil dana dari Vault (Only Owner)
 async function removeFundsFromVault(amount) {
   const accounts = await web3.eth.requestAccounts();
   const ownerAddress = accounts[0];
@@ -80,7 +80,7 @@ async function removeFundsFromVault(amount) {
   }
 }
 
-// Get vault balance
+// Dapatkan baki Vault
 async function getVaultBalance() {
   try {
     const balance = await quantumVault.methods.getVaultBalance().call();
@@ -90,12 +90,12 @@ async function getVaultBalance() {
   }
 }
 
-// Add listener to buttons or triggers in the UI
+// Menambah pendengar acara kepada butang-butang dalam UI
 document.getElementById('access-vault-btn').addEventListener('click', accessQuantumVault);
 document.getElementById('claim-reward-btn').addEventListener('click', () => {
   const amount = document.getElementById('reward-amount').value;
   claimReward(web3.utils.toWei(amount, "ether"));
 });
 
-// Show vault balance
+// Menunjukkan baki vault
 document.getElementById('vault-balance-btn').addEventListener('click', getVaultBalance);
