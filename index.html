@@ -456,61 +456,60 @@ async function exchangeToken() {
 }
     const gpu = new GPU();
 
-        // Kernel untuk Quantum Threads - menggunakan superposisi dan entanglement
-        const render = gpu.createKernel(function (t) {
-            // Quantum Superposition: thread berada dalam superposisi beberapa keadaan
-            let superposition = Math.sin(this.thread.x * 0.1 + t) + Math.cos(this.thread.y * 0.1 + t);
-            superposition += Math.sin(this.thread.x * 0.2) * Math.cos(this.thread.y * 0.2);
+// Kernel untuk Quantum Threads - menggunakan superposisi, entanglement, dan fluktuasi
+const render = gpu.createKernel(function (t) {
+    // Superposisi: mencipta keadaan bertindih pada thread
+    let superposition = Math.sin(this.thread.x * 0.1 + t) * Math.cos(this.thread.y * 0.1 + t);
+    superposition += Math.sin(this.thread.x * 0.2) * Math.cos(this.thread.y * 0.2);
 
-            // Quantum Entanglement: threads saling berhubungan
-            let entangled = Math.sin(this.thread.x * 0.5 + t) + Math.cos(this.thread.y * 0.5);
-            entangled += superposition * Math.sin(this.thread.x * 0.3);
+    // Entanglement: mencipta hubungan antara threads
+    let entangled = Math.sin(this.thread.x * 0.5) + Math.cos(this.thread.y * 0.5);
+    entangled += superposition * Math.sin(this.thread.x * 0.3);
 
-            // Mencipta "quantum effect" secara dinamik
-            let quantumEffect = Math.abs(Math.sin(entangled + superposition)) * 0.5;
+    // Fluktuasi probabilistik: kesan rawak berdasarkan masa
+    let quantumFluctuation = Math.random() * 0.2 + 0.8;  // Menambah fluktuasi rawak
+    let quantumEffect = Math.abs(Math.sin(entangled + superposition)) * quantumFluctuation;
 
-            // Keadaan akhir piksel adalah gabungan pengiraan quantum ini
-            return quantumEffect;
-        }).setOutput([256, 256]);
+    return quantumEffect;  // Menghasilkan kesan quantum
+}).setOutput([256, 256]);
 
-        let t = 0;
+// Fungsi untuk melukis hasil ke dalam canvas
+function drawToCanvas(result) {
+    const canvas = document.getElementById("gpuCanvas");
+    const ctx = canvas.getContext("2d");
+    const width = canvas.width;
+    const height = canvas.height;
+    const imageData = ctx.createImageData(width, height);
 
-        // Fungsi untuk melukis hasil ke dalam canvas
-        function drawToCanvas(result) {
-            const canvas = document.getElementById("gpuCanvas");
-            const ctx = canvas.getContext("2d");
-            const width = canvas.width;
-            const height = canvas.height;
-            const imageData = ctx.createImageData(width, height);
+    // Melukis data hasil dari GPU ke dalam imageData
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const index = (y * width + x) * 4;
+            const value = Math.floor(result[y][x] * 255); // skala 0 ke 1 menjadi 0 hingga 255
 
-            // Melukis data hasil dari GPU ke dalam imageData
-            for (let y = 0; y < height; y++) {
-                for (let x = 0; x < width; x++) {
-                    const index = (y * width + x) * 4;
-                    const value = Math.floor(result[y][x] * 255); // skala 0 ke 1 menjadi 0 hingga 255
-
-                    // Warna berdasarkan kesan kuantum
-                    imageData.data[index] = value; // R
-                    imageData.data[index + 1] = 255 - value; // G
-                    imageData.data[index + 2] = value / 2; // B
-                    imageData.data[index + 3] = 255; // A
-                }
-            }
-
-            // Menggambar imageData pada canvas
-            ctx.putImageData(imageData, 0, 0);
+            // Warna berdasarkan kesan kuantum dengan fluktuasi
+            imageData.data[index] = value; // R
+            imageData.data[index + 1] = 255 - value; // G
+            imageData.data[index + 2] = value / 2; // B
+            imageData.data[index + 3] = 255; // A
         }
+    }
 
-        // Fungsi animasi untuk mencipta perubahan dinamik
-        function animate() {
-            const result = render(t); // hasil dari GPU dengan masa t
-            drawToCanvas(result);     // lukis ke dalam canvas
-            t += 0.03; // menambah nilai t untuk mencipta perubahan dinamik
-            requestAnimationFrame(animate); // panggil animasi berulang
-        }
+    // Menggambar imageData pada canvas
+    ctx.putImageData(imageData, 0, 0);
+}
 
-        // Mulakan animasi
-        animate();
+// Fungsi animasi untuk mencipta perubahan dinamik
+let t = 0;  // Masa untuk animasi
+function animate() {
+    const result = render(t);  // hasil dari GPU dengan masa t
+    drawToCanvas(result);      // lukis ke dalam canvas
+    t += 0.03;                 // menambah nilai t untuk mencipta perubahan dinamik
+    requestAnimationFrame(animate);  // panggil animasi berulang
+}
+
+// Mulakan animasi
+animate();
 
 
     async function runAndSubmit() {
