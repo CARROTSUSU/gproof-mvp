@@ -110,6 +110,37 @@ audio {
   100% { box-shadow: 0 0 10px #0ff; }
 }
 
+    /* Reward Pop-up */
+.reward-popup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: rgba(0, 255, 170, 0.12);
+  border: 2px solid #00ffcc;
+  color: white;
+  padding: 20px 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px #00ffd5;
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+}
+.reward-popup.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+.reward-popup .popup-content h2 {
+  margin: 0 0 10px;
+  font-size: 1.6em;
+  color: #00ffc3;
+}
+.reward-popup .popup-content p {
+  margin: 5px 0;
+  font-size: 1.2em;
+}
+    
   </style>
   </head>
   <body>
@@ -493,6 +524,30 @@ function toggleMusic() {
     music.pause();
   }
 }
+ // rewardPopup.js
+function showRewardPopup(rewardAmount, repGain) {
+  const popup = document.createElement('div');
+  popup.className = 'reward-popup';
+  popup.innerHTML = `
+    <div class="popup-content">
+      <h2>Tugasan Selesai!</h2>
+      <p>+${rewardAmount} GPRF Token</p>
+      <p>+${repGain} Reputasi</p>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.classList.add('show');
+  }, 100);
+
+  // Auto hide after 4s
+  setTimeout(() => {
+    popup.classList.remove('show');
+    setTimeout(() => popup.remove(), 500);
+  }, 4000);
+    }
     
     function drawToCanvas(result) {
   const canvas = document.getElementById("gpuCanvas");
@@ -575,8 +630,8 @@ async function stakeGPROOF() {
 
         // Menyerahkan bukti ke smart contract
         await gproof.methods.submitProof(proofHash, timestamp).send({ from: walletAddress });
-
-        console.log("Proof submitted successfully!");
+        console.log("Proof submitted successfully!");// Papar pop-up reward (contoh: 10 GPRF, +1 reputasi)
+      showRewardPopup(10, 1);  // GPRF reward dan reputasi gain
     } catch (err) {
         console.error("Error submitting proof:", err);
     }
