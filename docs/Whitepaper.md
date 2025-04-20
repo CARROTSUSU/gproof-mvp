@@ -1,26 +1,81 @@
-# GPROOF: Whitepaper
+# GPROOF: The Quantum-Powered Future of Decentralized Proof Systems
 
-## Pengenalan
-GPROOF adalah sistem Proof-of-Work berasaskan GPU yang menggunakan teknologi blockchain untuk memastikan ketelusan, integriti, dan kecekapan dalam pengurusan tugas desentralisasi. Dengan menggabungkan blockchain, GPU, dan teknologi quantum, GPROOF menawarkan sebuah platform untuk pengurusan tugas secara desentralisasi yang lebih efisien dan selamat.
+## Executive Summary
+GPROOF redefines the future of decentralized computation by fusing GPU-intensive operations, quantum-inspired threading, and blockchain transparency into a revolutionary Proof-of-Work 2.0 system. It introduces a trustless, incentivized ecosystem powered by the $GPRF token, where tasks are not only distributed, but intelligently ranked, verified, and rewarded based on node reputation, quantum-scale computation, and real-time GPU workloads.
 
-## Masalah yang Diselesaikan
-Dalam dunia blockchain, banyak tugas pengiraan berat yang memerlukan kuasa pengkomputeran yang besar. GPROOF menyediakan penyelesaian yang membolehkan pembahagian dan pengurusan tugas GPU secara desentralisasi dengan cara yang lebih telus dan berkesan, mengurangkan kos dan meningkatkan kecekapan.
+## Vision Statement
+**"GPROOF is the fusion core of tomorrow's decentralized supercomputing—where reputation is proof, and GPU is power."**
 
-## Arkitektur GPROOF
-- **Proof-of-Work GPU**: Memanfaatkan kuasa pengiraan GPU untuk menjalankan tugas-tugas Proof-of-Work.
-- **Kontrak Pintar**: Menggunakan kontrak pintar untuk menguruskan ganjaran, reputasi, dan pengesahan tugas.
-- **Quantum Vault**: Sistem Quantum yang menyediakan kelebihan dalam menyimpan dan melindungi aset pengguna.
-- **Ganjaran & Tokenomics**: Pengguna menerima ganjaran dalam bentuk token GPROOF (GPRF) berdasarkan prestasi dan sumbangan mereka.
+In a world shifting toward decentralized intelligence, GPROOF stands as the sovereign engine of trust, performance, and value.
 
-## Ganjaran dan Tokenomics
-- **GPROOF Token (GPRF)**: Token ERC-20 yang digunakan untuk ganjaran dan transaksi dalam ekosistem.
-- **Staking & Ganjaran**: Pengguna boleh menyertai sistem staking untuk menerima ganjaran berdasarkan reputasi dan sumbangan mereka.
-- **Quantum Vault**: Menyediakan akses eksklusif kepada pengguna yang mencapai tahap Quantum.
+---
 
-## Keselamatan dan Skala
-GPROOF menggunakan teknologi blockchain dan teknik pengesahan yang terjamin untuk memastikan keselamatan data. Selain itu, GPROOF boleh diskala dengan mudah menggunakan teknologi quantum untuk menangani lebih banyak tugas dan transaksi.
+## Core Technologies
 
-## Pelaksanaan dan Masa Depan
-- **Fasa 1**: Pengembangan dan pelancaran kontrak pintar.
-- **Fasa 2**: Integrasi dengan Quantum Vault dan peningkatan skala.
-- **Fasa 3**: Ekspansi kepada platform lain dan kemas kini teknologi.
+### 1. Quantum Threads (QThreads)
+Inspired by quantum superposition and entanglement, GPROOF integrates simulated Quantum Threads in GPU computation using `GPU.js`. These threads represent dynamic, entangled states that emulate quantum behavior for advanced task rendering and visualizations.
+
+### 2. GPU Task Fabric
+A distributed task execution model where computational work is assigned to GPU-enabled nodes. Workloads are visualized in real-time, validated on-chain, and rewarded automatically.
+
+### 3. Reputation-Led Proof Engine
+Each node builds a reputation score (REP) based on historical accuracy, completion rate, and honesty. This score affects future task eligibility and reward multipliers.
+
+### 4. ERC20 Reward Token: $GPRF
+The native token of GPROOF, $GPRF, powers the ecosystem by rewarding node contributions, staking for access tiers, and enabling token swaps via the integrated DEX.
+
+---
+
+## System Architecture
+- **GPROOFCore.sol** – Manages node reputation, proof submissions, and reward trigger.
+- **TaskManager.sol** – Assigns, tracks, and validates GPU-based tasks.
+- **RewardManager.sol** – Mints and distributes $GPRF tokens based on performance.
+- **GProofToken.sol** – ERC20 compliant token contract with staking features.
+- **Dashboard (Quantum HUD)** – Web-based interactive dashboard with real-time GPU rendering, staking panels, exchange, and leaderboard.
+
+---
+
+## Quantum Visual System (QVS)
+Visual layer powered by GPU.js showcasing animated quantum threads, task hashes, and holographic metrics on canvas. Offers:
+- Quantum Energy Pulse Visuals
+- Live Task Hash Stream
+- Entangled Node Radar
+
+---
+
+## Vaults and Quantum Staking
+Nodes may stake $GPRF into Quantum Vaults—dynamic staking pools that unlock advanced tiers (Bronze, Silver, Gold, Quantum). Vaults scale reward rates and unlock private task channels.
+
+---
+
+## Key Features
+- Quantum Thread Visual Engine
+- Reputation-Based Ranking System
+- Real-time GPU Proof Verification
+- DEX-enabled Token Exchange (ETH/GPRF/USDT)
+- Quantum Vault Staking Panel
+- Cross-chain Expandability
+
+---
+
+## Use Cases
+- Decentralized AI Model Training
+- Distributed Rendering Network
+- Quantum Simulation Interface
+- Blockchain Verifiable Proof Network
+
+---
+
+## Roadmap
+**Q2 2025**: GPROOF MVP Launch on Sepolia Testnet  
+**Q3 2025**: Launch of Quantum Threads and Full HUD Dashboard  
+**Q4 2025**: Mainnet Deployment + GPRF DEX + Vault Staking  
+**2026**: Cross-Chain Integration + Quantum-Accelerated Engine V2
+
+---
+
+## Final Words
+GPROOF is not just a protocol—it is the heartbeat of next-gen trustless computing. Fueled by GPU precision, verified through decentralized consensus, and supercharged by quantum-inspired architecture. It is a glimpse into the computational soul of Web3.
+
+**GPROOF: Power the Future. Prove with Quantum.**
+
