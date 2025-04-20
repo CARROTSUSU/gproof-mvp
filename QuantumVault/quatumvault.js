@@ -1,63 +1,101 @@
-// Inisialisasi Web3 dan kontrak
-let web3;
-let contract;
-let accounts;
-const vaultAddress = '0xYourQuantumVaultAddress'; // Gantikan dengan alamat kontrak QuantumVault
-const stakingContractAddress = '0xYourStakingContractAddress'; // Gantikan dengan alamat kontrak Staking
-const quantumVaultABI = [...]; // Masukkan ABI QuantumVault
-const stakingContractABI = [...]; // Masukkan ABI Staking Contract
+// Import Web3 and contract ABI
+const Web3 = require("web3");
+const web3 = new Web3(window.ethereum); // Assuming MetaMask or another web3 provider is injected
 
-// Inisialisasi Web3
-async function initWeb3() {
-    if (window.ethereum) {
-        web3 = new Web3(window.ethereum);
-        await window.ethereum.enable(); // Meminta akses MetaMask
-        accounts = await web3.eth.getAccounts();
-        contract = new web3.eth.Contract(quantumVaultABI, vaultAddress);
-        checkVaultStatus(); // Periksa status vault pengguna
+const quantumVaultABI = [ /* ABI dari QuantumVault.sol */ ];
+const stakingContractABI = [ /* ABI dari Staking Contract */ ];
+const rewardTokenABI = [ /* ABI dari ERC20 Token GPRF */ ];
+
+const quantumVaultAddress = "0x..."; // Alamat QuantumVault.sol
+const stakingContractAddress = "0x..."; // Alamat Staking Contract
+const rewardTokenAddress = "0x..."; // Alamat Token GPRF
+
+const quantumVault = new web3.eth.Contract(quantumVaultABI, quantumVaultAddress);
+const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
+const rewardToken = new web3.eth.Contract(rewardTokenABI, rewardTokenAddress);
+
+// Function untuk memeriksa status akses Vault
+async function checkVaultAccess(userAddress) {
+  try {
+    const hasAccessed = await quantumVault.methods.hasAccessedVault(userAddress).call();
+    if (hasAccessed) {
+      console.log("User has accessed the vault.");
     } else {
-        alert("Pasang MetaMask untuk mengakses!");
+      console.log("User has not accessed the vault.");
     }
+  } catch (error) {
+    console.error("Error checking vault access:", error);
+  }
 }
 
-// Memeriksa status Vault
-async function checkVaultStatus() {
-    const vaultStatus = await contract.methods.getVaultStatus(accounts[0]).call();
-    document.getElementById("vaultStatus").textContent = vaultStatus ? "Accessed" : "Not Accessed";
+// Function untuk mengakses Vault
+async function accessQuantumVault() {
+  const accounts = await web3.eth.requestAccounts();
+  const userAddress = accounts[0];
+
+  try {
+    await quantumVault.methods.accessVault().send({ from: userAddress });
+    console.log("Successfully accessed Quantum Vault");
+  } catch (error) {
+    console.error("Error accessing the vault:", error);
+  }
 }
 
-// Akses Vault
-async function accessVault() {
-    const tier = await getUserTier();
-    if (tier === "4") { // Hanya Quantum Tier boleh akses vault
-        await contract.methods.accessVault().send({ from: accounts[0] });
-        document.getElementById("vaultStatus").textContent = "Vault Accessed!";
-    } else {
-        document.getElementById("vaultStatus").textContent = "Only Quantum Tier can access!";
-    }
+// Function untuk mengklaim ganjaran
+async function claimReward(amount) {
+  const accounts = await web3.eth.requestAccounts();
+  const userAddress = accounts[0];
+
+  try {
+    await quantumVault.methods.claimReward(amount).send({ from: userAddress });
+    console.log(`Successfully claimed ${amount} GPRF rewards`);
+  } catch (error) {
+    console.error("Error claiming reward:", error);
+  }
 }
 
-// Claim Reward
-async function claimReward() {
-    const reward = await contract.methods.claimReward().send({ from: accounts[0] });
-    const rewardAmount = web3.utils.fromWei(reward, 'ether');
-    document.getElementById("vaultReward").textContent = `${rewardAmount} GPROOF`;
+// Function untuk menambah dana ke Vault (Only Owner)
+async function addFundsToVault(amount) {
+  const accounts = await web3.eth.requestAccounts();
+  const ownerAddress = accounts[0];
+
+  try {
+    await quantumVault.methods.addFunds(amount).send({ from: ownerAddress });
+    console.log(`Successfully added ${amount} to the Quantum Vault`);
+  } catch (error) {
+    console.error("Error adding funds to vault:", error);
+  }
 }
 
-// Dapatkan Tier Pengguna dari kontrak Staking
-async function getUserTier() {
-    const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
-    const tier = await stakingContract.methods.getUserTier(accounts[0]).call();
-    return tier; // Mengembalikan nilai tier (contoh: 4 untuk Quantum)
+// Function untuk mengambil dana dari Vault (Only Owner)
+async function removeFundsFromVault(amount) {
+  const accounts = await web3.eth.requestAccounts();
+  const ownerAddress = accounts[0];
+
+  try {
+    await quantumVault.methods.removeFunds(amount).send({ from: ownerAddress });
+    console.log(`Successfully removed ${amount} from the Quantum Vault`);
+  } catch (error) {
+    console.error("Error removing funds from vault:", error);
+  }
 }
 
-// Inisialisasi dan tetapkan event listener
-window.onload = () => {
-    initWeb3();
+// Get vault balance
+async function getVaultBalance() {
+  try {
+    const balance = await quantumVault.methods.getVaultBalance().call();
+    console.log("Quantum Vault balance:", web3.utils.fromWei(balance, "ether"));
+  } catch (error) {
+    console.error("Error getting vault balance:", error);
+  }
+}
 
-    // Event listener untuk akses vault
-    document.getElementById("accessVaultBtn").addEventListener("click", accessVault);
+// Add listener to buttons or triggers in the UI
+document.getElementById('access-vault-btn').addEventListener('click', accessQuantumVault);
+document.getElementById('claim-reward-btn').addEventListener('click', () => {
+  const amount = document.getElementById('reward-amount').value;
+  claimReward(web3.utils.toWei(amount, "ether"));
+});
 
-    // Event listener untuk claim ganjaran
-    document.getElementById("claimRewardBtn").addEventListener("click", claimReward);
-};
+// Show vault balance
+document.getElementById('vault-balance-btn').addEventListener('click', getVaultBalance);
