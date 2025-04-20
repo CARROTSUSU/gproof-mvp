@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quantum Swap Module</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="entanglement-monitor.css">
+  
 </head>
 <body class="dark-theme">
   <div class="quantum-panel">
@@ -39,6 +41,25 @@
       </div>
     </div>
   </div>
+  
+  <div class="entanglement-panel">
+  <div class="panel-header">Entanglement Sync Monitor</div>
+  <div class="node-info">
+    <div>Node ID: <span class="highlight">QNode-X21</span></div>
+    <div>Status: <span id="sync-status" class="status synced">Synced</span></div>
+  </div>
+  <div class="entanglement-strength">
+    <label>Entanglement Strength</label>
+    <div class="strength-bar">
+      <div class="bar-fill" id="strength-fill" style="width: 84%;"></div>
+    </div>
+    <div class="percent-text" id="strength-percent">84%</div>
+  </div>
+  <div class="timestamp">
+    Last Sync: <span id="last-sync">2025-04-20 23:32:10</span>
+  </div>
+</div>
+
 
   <script src="script.js"></script>
 </body>
