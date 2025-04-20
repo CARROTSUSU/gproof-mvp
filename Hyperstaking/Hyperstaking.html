@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HyperStaking Tower</title>
+  <link rel="stylesheet" href="staking.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+</head>
+<body>
+  <div class="title">HyperStaking Tower</div>
+
+  <div class="tower">
+    <div class="tier quantum">Quantum</div>
+    <div class="tier gold">Gold</div>
+    <div class="tier silver">Silver</div>
+    <div class="tier bronze">Bronze</div>
+  </div>
+
+  <div class="stake-panel">
+    <input type="number" id="stakeAmount" placeholder="Amount GPROOF" />
+    <button onclick="stakeTokens()">Stake</button>
+    <button onclick="claimReward()">Claim Reward</button>
+    <div id="stakeInfo">Loading...</div>
+  </div>
+
+  <script src="staking.js"></script>
+</body>
+</html>
 
