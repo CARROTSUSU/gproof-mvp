@@ -1,101 +1,85 @@
-// Import Web3 dan ABI kontrak pintar
-const Web3 = require("web3");
-const web3 = new Web3(window.ethereum); // Anggap MetaMask atau penyedia web3 lain disuntik
+// Pastikan anda telah memasang ethers.js atau Web3.js, contohnya dengan CDN
+// <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.umd.min.js"></script>
 
-const quantumVaultABI = [ /* ABI dari QuantumVault.sol */ ];
-const stakingContractABI = [ /* ABI dari Staking Contract */ ];
-const rewardTokenABI = [ /* ABI dari ERC20 Token GPRF */ ];
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+let signer, userAddress;
 
-const quantumVaultAddress = "0x..."; // Alamat QuantumVault.sol
-const stakingContractAddress = "0x..."; // Alamat Staking Contract
-const rewardTokenAddress = "0x..."; // Alamat Token GPRF
+// Alamat kontrak yang diperlukan
+const vaultContractAddress = '0xYourVaultContractAddress'; // Gantikan dengan alamat kontrak QuantumVault
+const stakingContractAddress = '0xYourStakingContractAddress'; // Gantikan dengan alamat kontrak Staking
+const rewardTokenAddress = '0xYourRewardTokenAddress'; // Gantikan dengan alamat kontrak GPRF
 
-const quantumVault = new web3.eth.Contract(quantumVaultABI, quantumVaultAddress);
-const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
-const rewardToken = new web3.eth.Contract(rewardTokenABI, rewardTokenAddress);
+// ABI untuk kontrak QuantumVault
+const vaultABI = [
+  // Masukkan ABI QuantumVault.sol di sini
+];
 
-// Fungsi untuk memeriksa status akses Vault
-async function checkVaultAccess(userAddress) {
+// ABI untuk kontrak Staking
+const stakingABI = [
+  // Masukkan ABI Staking.sol di sini
+];
+
+// ABI untuk kontrak GPRF (ERC20)
+const rewardTokenABI = [
+  // Masukkan ABI ERC20 untuk GPRF di sini
+];
+
+// Dapatkan kontrak dari alamat dan ABI
+const vaultContract = new ethers.Contract(vaultContractAddress, vaultABI, provider);
+const stakingContract = new ethers.Contract(stakingContractAddress, stakingABI, provider);
+const rewardToken = new ethers.Contract(rewardTokenAddress, rewardTokenABI, provider);
+
+// Fungsi untuk sambung wallet
+async function connectWallet() {
   try {
-    const hasAccessed = await quantumVault.methods.hasAccessedVault(userAddress).call();
-    if (hasAccessed) {
-      console.log("User has accessed the vault.");
-    } else {
-      console.log("User has not accessed the vault.");
-    }
-  } catch (error) {
-    console.error("Error checking vault access:", error);
+    await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    userAddress = await signer.getAddress();
+    console.log("Wallet connected:", userAddress);
+    checkAccess();
+  } catch (err) {
+    console.error("Error connecting wallet:", err);
   }
 }
 
-// Fungsi untuk mengakses Vault
-async function accessQuantumVault() {
-  const accounts = await web3.eth.requestAccounts();
-  const userAddress = accounts[0];
-
-  try {
-    await quantumVault.methods.accessVault().send({ from: userAddress });
-    console.log("Successfully accessed Quantum Vault");
-  } catch (error) {
-    console.error("Error accessing the vault:", error);
+// Fungsi untuk semak akses vault
+async function checkAccess() {
+  const userTier = await stakingContract.userTier(userAddress);
+  const userReputation = await stakingContract.userReputation(userAddress);
+  const userStake = await stakingContract.userStake(userAddress);
+  
+  if (userTier >= 4 && userReputation >= 900 && userStake >= ethers.utils.parseUnits('10000', 18)) {
+    document.querySelector('.vault-status').innerHTML = "Vault Status: <strong>Ready</strong>";
+    document.querySelector('button').disabled = false; // Enable Unlock Vault button
+  } else {
+    document.querySelector('.vault-status').innerHTML = "Vault Status: <strong>Insufficient Requirements</strong>";
   }
 }
 
-// Fungsi untuk mengklaim ganjaran
+// Fungsi untuk akses vault
+async function accessVault() {
+  try {
+    const tx = await vaultContract.connect(signer).accessVault();
+    await tx.wait();
+    console.log("Vault accessed successfully!");
+    document.querySelector('.vault-status').innerHTML = "Vault Status: <strong>Accessed</strong>";
+  } catch (err) {
+    console.error("Error accessing vault:", err);
+  }
+}
+
+// Fungsi untuk claim reward
 async function claimReward(amount) {
-  const accounts = await web3.eth.requestAccounts();
-  const userAddress = accounts[0];
-
   try {
-    await quantumVault.methods.claimReward(amount).send({ from: userAddress });
-    console.log(`Successfully claimed ${amount} GPRF rewards`);
-  } catch (error) {
-    console.error("Error claiming reward:", error);
+    const tx = await vaultContract.connect(signer).claimReward(ethers.utils.parseUnits(amount.toString(), 18));
+    await tx.wait();
+    console.log(`Claimed ${amount} rewards successfully!`);
+  } catch (err) {
+    console.error("Error claiming reward:", err);
   }
 }
 
-// Fungsi untuk menambah dana ke Vault (Only Owner)
-async function addFundsToVault(amount) {
-  const accounts = await web3.eth.requestAccounts();
-  const ownerAddress = accounts[0];
+// Tambahkan Event Listeners untuk butang
+document.querySelector('button').addEventListener('click', accessVault); // Unlock Vault
+document.querySelector('button:nth-child(2)').addEventListener('click', () => claimReward(10)); // Claim Reward (example)
 
-  try {
-    await quantumVault.methods.addFunds(amount).send({ from: ownerAddress });
-    console.log(`Successfully added ${amount} to the Quantum Vault`);
-  } catch (error) {
-    console.error("Error adding funds to vault:", error);
-  }
-}
-
-// Fungsi untuk mengambil dana dari Vault (Only Owner)
-async function removeFundsFromVault(amount) {
-  const accounts = await web3.eth.requestAccounts();
-  const ownerAddress = accounts[0];
-
-  try {
-    await quantumVault.methods.removeFunds(amount).send({ from: ownerAddress });
-    console.log(`Successfully removed ${amount} from the Quantum Vault`);
-  } catch (error) {
-    console.error("Error removing funds from vault:", error);
-  }
-}
-
-// Dapatkan baki Vault
-async function getVaultBalance() {
-  try {
-    const balance = await quantumVault.methods.getVaultBalance().call();
-    console.log("Quantum Vault balance:", web3.utils.fromWei(balance, "ether"));
-  } catch (error) {
-    console.error("Error getting vault balance:", error);
-  }
-}
-
-// Menambah pendengar acara kepada butang-butang dalam UI
-document.getElementById('access-vault-btn').addEventListener('click', accessQuantumVault);
-document.getElementById('claim-reward-btn').addEventListener('click', () => {
-  const amount = document.getElementById('reward-amount').value;
-  claimReward(web3.utils.toWei(amount, "ether"));
-});
-
-// Menunjukkan baki vault
-document.getElementById('vault-balance-btn').addEventListener('click', getVaultBalance);
