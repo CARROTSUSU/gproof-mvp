@@ -1,0 +1,21 @@
+.tower {
+  width: 200px;
+  height: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.tier {
+  height: 25%;
+  text-align: center;
+  color: white;
+  line-height: 125px;
+  font-weight: bold;
+  border-top: 1px solid #333;
+}
+
+.bronze { background: #b08d57; }
+.silver { background: #c0c0c0; }
+.gold { background: #ffd700; }
+.quantum { background: linear-gradient(45deg, #00faff, #a100ff); }
