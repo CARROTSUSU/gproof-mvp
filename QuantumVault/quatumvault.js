@@ -1,79 +1,63 @@
+// Inisialisasi Web3 dan kontrak
 let web3;
 let contract;
 let accounts;
-const vaultAddress = '0xYourQuantumVaultAddress'; // Alamat kontrak QuantumVault
-const stakingContractAddress = '0xYourStakingContractAddress'; // Alamat kontrak Staking
-const rewardTokenAddress = '0xYourGPRFTokenAddress'; // Alamat kontrak Token GPRF
+const vaultAddress = '0xYourQuantumVaultAddress'; // Gantikan dengan alamat kontrak QuantumVault
+const stakingContractAddress = '0xYourStakingContractAddress'; // Gantikan dengan alamat kontrak Staking
+const quantumVaultABI = [...]; // Masukkan ABI QuantumVault
+const stakingContractABI = [...]; // Masukkan ABI Staking Contract
 
-// ABI untuk QuantumVault dan Staking Contract
-const quantumVaultABI = [...]; // Masukkan ABI untuk QuantumVault.sol
-const stakingContractABI = [...]; // Masukkan ABI untuk Staking Contract
-
-// Inisialisasi Web3 dan kontrak
+// Inisialisasi Web3
 async function initWeb3() {
     if (window.ethereum) {
         web3 = new Web3(window.ethereum);
-        await window.ethereum.enable(); // Meminta akses wallet Metamask
+        await window.ethereum.enable(); // Meminta akses MetaMask
         accounts = await web3.eth.getAccounts();
         contract = new web3.eth.Contract(quantumVaultABI, vaultAddress);
-        checkUserInfo(); // Memanggil fungsi untuk mendapatkan maklumat pengguna
+        checkVaultStatus(); // Periksa status vault pengguna
     } else {
-        alert("Sila pasang MetaMask untuk sambung ke blockchain.");
+        alert("Pasang MetaMask untuk mengakses!");
     }
 }
 
-// Memeriksa maklumat pengguna dari kontrak staking (Tier, Reputasi, Stake)
-async function checkUserInfo() {
-    const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
-    const userTier = await stakingContract.methods.userTier(accounts[0]).call();
-    const userReputation = await stakingContract.methods.userReputation(accounts[0]).call();
-    const userStake = await stakingContract.methods.userStake(accounts[0]).call();
-
-    document.getElementById("user-tier").textContent = getTierName(userTier);
-    document.getElementById("user-reputation").textContent = userReputation;
-    document.getElementById("user-stake").textContent = web3.utils.fromWei(userStake, 'ether');
+// Memeriksa status Vault
+async function checkVaultStatus() {
+    const vaultStatus = await contract.methods.getVaultStatus(accounts[0]).call();
+    document.getElementById("vaultStatus").textContent = vaultStatus ? "Accessed" : "Not Accessed";
 }
 
-// Menukar nombor tier kepada nama tier
-function getTierName(tier) {
-    switch(tier) {
-        case '4': return "Quantum";
-        case '3': return "Gold";
-        case '2': return "Silver";
-        case '1': return "Bronze";
-        default: return "Unknown";
-    }
-}
-
-// Akses Vault: Membolehkan pengguna mengakses vault jika mereka berada di Quantum Tier
+// Akses Vault
 async function accessVault() {
-    const tier = await contract.methods.userTier(accounts[0]).call();
-    if (tier === "4") {
+    const tier = await getUserTier();
+    if (tier === "4") { // Hanya Quantum Tier boleh akses vault
         await contract.methods.accessVault().send({ from: accounts[0] });
-        document.getElementById("vault-status").textContent = "Vault Diakses!";
+        document.getElementById("vaultStatus").textContent = "Vault Accessed!";
     } else {
-        document.getElementById("vault-status").textContent = "Anda perlu berada di Quantum Tier untuk akses vault.";
+        document.getElementById("vaultStatus").textContent = "Only Quantum Tier can access!";
     }
 }
 
-// Claim Reward: Membolehkan pengguna claim ganjaran dari vault
+// Claim Reward
 async function claimReward() {
-    const vaultBalance = await contract.methods.getVaultBalance().call();
-    if (vaultBalance > 0) {
-        await contract.methods.claimReward(web3.utils.toWei('10', 'ether')).send({ from: accounts[0] });
-        document.getElementById("vault-status").textContent = "Ganjaran Berjaya Diambil!";
-    } else {
-        document.getElementById("vault-status").textContent = "Tiada ganjaran yang tersedia.";
-    }
+    const reward = await contract.methods.claimReward().send({ from: accounts[0] });
+    const rewardAmount = web3.utils.fromWei(reward, 'ether');
+    document.getElementById("vaultReward").textContent = `${rewardAmount} GPROOF`;
 }
 
-// Fungsi untuk memanggil dan melaksanakan fungsi utama
+// Dapatkan Tier Pengguna dari kontrak Staking
+async function getUserTier() {
+    const stakingContract = new web3.eth.Contract(stakingContractABI, stakingContractAddress);
+    const tier = await stakingContract.methods.getUserTier(accounts[0]).call();
+    return tier; // Mengembalikan nilai tier (contoh: 4 untuk Quantum)
+}
+
+// Inisialisasi dan tetapkan event listener
 window.onload = () => {
     initWeb3();
 
-    // Tetapkan event listener untuk button "Access Vault"
-    document.getElementById("access-vault-btn").addEventListener("click", accessVault);
+    // Event listener untuk akses vault
+    document.getElementById("accessVaultBtn").addEventListener("click", accessVault);
 
-    // Tetapkan event listener untuk button "Claim Reward"
-    document.getElementById("claim-reward-btn").addEventListener("click", claimReward);
+    // Event listener untuk claim ganjaran
+    document.getElementById("claimRewardBtn").addEventListener("click", claimReward);
 };
