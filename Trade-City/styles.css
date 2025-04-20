@@ -1,4 +1,4 @@
-//html css
+/* Base Styles */
 body.quantum-vision {
   background: linear-gradient(180deg, #01010a, #111);
   color: #00f9ff;
@@ -33,6 +33,7 @@ body.quantum-vision {
   color: #ff00ff;
 }
 
+/* Grid Layout */
 .trade-city {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -48,6 +49,7 @@ body.quantum-vision {
   box-shadow: 0 0 15px #0ff4;
 }
 
+/* Swap UI */
 .swap-ui, .prices {
   display: flex;
   align-items: center;
@@ -76,6 +78,7 @@ body.quantum-vision {
   background: linear-gradient(to right, #00f9ff, #ff00ff);
 }
 
+/* Animation Effects */
 .waveform, .qr-hologram, .field-generator {
   height: 80px;
   background: repeating-linear-gradient(90deg, #0ff 0px, #0ff 2px, transparent 2px, transparent 4px);
@@ -89,6 +92,7 @@ body.quantum-vision {
   50% { opacity: 1; }
 }
 
+/* Buttons */
 button {
   background: #0ff;
   color: #000;
@@ -130,7 +134,7 @@ body.wireframe button {
   box-shadow: none;
 }
 
-//Entanglement css
+/* Entanglement Panel */
 .entanglement-panel {
   background: linear-gradient(145deg, #0f0f2f, #1a1a3d);
   border: 2px solid #00fff2;
@@ -209,7 +213,7 @@ body.wireframe button {
   margin-top: 10px;
 }
 
-//feed css
+/* Live Trade Feed */
 .live-trade-feed {
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
@@ -267,9 +271,9 @@ h2 {
     background-color: #1d1d1d;
     color: #f39c12;
     border-radius: 5px;
-  }
+}
 
-//market css
+/* Market Intelligence HUD */
 .market-intelligence-hud {
     position: absolute;
     top: 10%;
@@ -316,5 +320,3 @@ h2 {
 #usdt-indicator {
     background-color: yellow;
 }
-
-//
