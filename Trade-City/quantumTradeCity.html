@@ -223,12 +223,71 @@
     </div>
   </div>
 
+  <div id="webstoreMarket">
+    <h2>Quantum Webstore Market</h2>
+
+    <!-- Marketplace Categories -->
+    <div id="categories">
+        <button onclick="filterCategory('NFT')">NFTs</button>
+        <button onclick="filterCategory('Tokens')">Tokens</button>
+        <button onclick="filterCategory('Services')">Services</button>
+    </div>
+
+    <!-- Product Listings -->
+    <div id="productList">
+        <div class="productItem">
+            <img src="nft1.jpg" alt="NFT1">
+            <h3>NFT Token A</h3>
+            <p>Price: 5 GPROOF</p>
+            <button onclick="buyProduct('NFT Token A', 5)">Buy</button>
+        </div>
+        <div class="productItem">
+            <img src="nft2.jpg" alt="NFT2">
+            <h3>NFT Token B</h3>
+            <p>Price: 10 ETH</p>
+            <button onclick="buyProduct('NFT Token B', 10)">Buy</button>
+        </div>
+        <!-- More product listings can go here -->
+    </div>
+
+    <!-- User Profile and Listings -->
+    <div id="userProfile">
+        <h3>Your Listings</h3>
+        <div id="userListings">
+            <!-- Show user listings here, such as NFTs for sale -->
+            <div class="listingItem">
+                <h4>Your NFT: NFT Token A</h4>
+                <button onclick="sellProduct('NFT Token A')">Sell</button>
+            </div>
+            <!-- More user listings can go here -->
+        </div>
+    </div>
+</div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     // Dummy JavaScript untuk animasi asas, gantikan dengan sambungan kontrak nanti
     document.querySelector('.swap-button').addEventListener('click', () => {
       alert('Swap Initiated');
     });
+
+    <!-- Example of filter JavaScript for categories -->
+    function filterCategory(category) {
+        // Logic to filter products by category (e.g., NFTs, Tokens, Services)
+        console.log("Filtering by category:", category);
+    }
+
+    function buyProduct(product, price) {
+        // Logic to initiate a purchase transaction
+        console.log("Buying product:", product, "for price:", price);
+        // Integrate Web3.js or Ethers.js for transaction
+    }
+
+    function sellProduct(product) {
+        // Logic to initiate a selling transaction
+        console.log("Selling product:", product);
+        // Integrate Web3.js or Ethers.js for transaction
+    }
   </script>
 </body>
 </html>
