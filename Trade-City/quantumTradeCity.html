@@ -1,49 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Trade City</title>
-    <link rel="stylesheet" href="Trade-City/styles.css">
-    <script src="Trade-City/script.js" </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Trade City</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
 </head>
+<body class="quantum-vision">
+  <nav class="nav-bar">
+    <ul>
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="quantumTradeCity.html" class="active">Quantum Trade City</a></li>
+      <li><a href="../quantumVault.html">Quantum Vault</a></li>
+      <li><a href="../wallet.html">Wallet</a></li>
+    </ul>
+    <button id="modeToggle">Switch UI Mode</button>
+  </nav>
 
-<body>
-    <!-- Navigation Bar -->
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="quantumTradeCity.html" class="active">Quantum Trade City</a></li>
-            <li><a href="quantumVault.html">Quantum Vault</a></li>
-            <li><a href="wallet.html">Wallet</a></li>
-        </ul>
-    </nav>
+  <main class="trade-city">
+    <h1>Quantum Trade City</h1>
 
-    <!-- Quantum Trade City Section -->
-    <section class="quantum-trade-city">
-        <h1>Quantum Trade City</h1>
-        <div class="market-intelligence">
-            <h2>Market Intelligence HUD</h2>
-            <p><strong>ETH Price:</strong> <span id="ethPrice">Loading...</span></p>
-            <p><strong>GPRF Price:</strong> <span id="gprfPrice">Loading...</span></p>
-            <p><strong>USDT Price:</strong> <span id="usdtPrice">Loading...</span></p>
-        </div>
-        <div class="quantum-swap">
-            <h2>Quantum Swap</h2>
-            <button id="swapButton">Swap Tokens</button>
-            <p>Energy Status: <span id="energyStatus">100%</span></p>
-        </div>
-        <div class="live-trade-feed">
-            <h2>Live Trade Feed</h2>
-            <ul id="tradeFeed">
-                <!-- Real-time trades will be populated here -->
-            </ul>
-        </div>
-        <div class="wallet-access">
-            <h2>Wallet Access</h2>
-            <p><strong>Wallet Balance:</strong> <span id="walletBalance">0 GPROOF</span></p>
-            <button id="connectWalletButton">Connect Wallet</button>
-        </div>
+    <section class="panel market-hud">
+      <h2>Market Intelligence HUD</h2>
+      <div class="waveform"></div>
+      <div class="prices">
+        <p><strong>ETH:</strong> <span id="ethPrice">Loading...</span></p>
+        <p><strong>GPRF:</strong> <span id="gprfPrice">Loading...</span></p>
+        <p><strong>USDT:</strong> <span id="usdtPrice">Loading...</span></p>
+      </div>
     </section>
+
+    <section class="panel quantum-swap">
+      <h2>Quantum Swap</h2>
+      <div class="swap-ui">
+        <select id="fromToken">
+          <option value="ETH">ETH</option>
+          <option value="GPRF">GPRF</option>
+          <option value="USDT">USDT</option>
+        </select>
+        <span class="swap-arrow">⇄</span>
+        <select id="toToken">
+          <option value="GPRF">GPRF</option>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+        </select>
+        <button id="swapButton">Swap</button>
+      </div>
+      <div class="energy-bar">
+        <div class="energy-fill" style="width: 100%"></div>
+      </div>
+      <p>Quantum Energy: <span id="energyStatus">100%</span></p>
+    </section>
+
+    <section class="panel live-feed">
+      <h2>Live Trade Feed</h2>
+      <ul id="tradeFeed">
+        <!-- Populated dynamically -->
+      </ul>
+    </section>
+
+    <section class="panel wallet-access">
+      <h2>Wallet Access</h2>
+      <div class="qr-hologram"></div>
+      <p><strong>Balance:</strong> <span id="walletBalance">0 GPRF</span></p>
+      <p><strong>Tier:</strong> <span id="walletTier">Bronze</span></p>
+      <p><strong>Staking:</strong> <span id="stakingStatus">Inactive</span></p>
+      <button id="connectWalletButton">Connect Wallet</button>
+    </section>
+
+    <section class="panel entanglement-monitor">
+      <h2>Entanglement Sync Monitor</h2>
+      <div class="field-generator"></div>
+      <p>Status: <span id="entangleStatus">Stable</span></p>
+    </section>
+  </main>
 </body>
 </html>
