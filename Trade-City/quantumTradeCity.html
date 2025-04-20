@@ -1,15 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quantum Swap Module</title>
-  <link rel="stylesheet" href="styles.css">
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Trade City</title>
+  <style>
+    :root {
+      --bg-color: #0a0a0f;
+      --neon-blue: #00f0ff;
+      --neon-pink: #ff00f7;
+      --neon-green: #00ffae;
+      --panel-glow: 0 0 25px var(--neon-blue);
+      --text-glow: 0 0 5px var(--neon-blue);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to right, #070716, #0a0a1a);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: var(--neon-blue);
+      text-shadow: var(--text-glow);
+    }
+
+    .quantum-panel, .entanglement-panel, .market-intelligence-hud,
+    .live-trade-feed, .wallet-access-panel {
+      border: 1px solid var(--neon-pink);
+      border-radius: 15px;
+      margin: 20px;
+      padding: 20px;
+      background-color: rgba(10, 10, 20, 0.85);
+      box-shadow: var(--panel-glow);
+    }
+
+    .swap-interface, .market-data, .wallet-summary,
+    .staking-status, .reputation-status, .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .token-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    select, input {
+      padding: 8px;
+      border: none;
+      background-color: #111;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .swap-button, #stake-btn, #claim-reward-btn, #transfer-btn {
+      background: var(--neon-green);
+      color: black;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .swap-button:hover {
+      background: var(--neon-pink);
+    }
+
+    .quantum-progress .progress-energy {
+      height: 10px;
+      background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { width: 10%; }
+      50% { width: 100%; }
+    }
+
+    .entanglement-strength .strength-bar {
+      height: 10px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--neon-green);
+    }
+
+    .highlight {
+      color: var(--neon-green);
+    }
+
+    .indicator {
+      width: 20px;
+      height: 20px;
+      background: var(--neon-pink);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 768px) {
+      .swap-interface, .market-data, .wallet-summary,
+      .staking-status, .reputation-status, .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body class="dark-theme">
+<body>
   <div class="quantum-panel">
-    <h1 class="panel-title">Quantum Swap Module</h1>
+    <h1>Quantum Swap Module</h1>
     <div class="swap-interface">
       <div class="token-box">
         <label>From:</label>
@@ -18,7 +125,7 @@
           <option value="USDT">USDT</option>
           <option value="GPRF">GPRF</option>
         </select>
-        <input type="number" placeholder="Amount" id="fromAmount">
+        <input type="number" placeholder="Amount" id="fromAmount" />
       </div>
 
       <div class="swap-arrow">⇌</div>
@@ -30,123 +137,98 @@
           <option value="USDT">USDT</option>
           <option value="ETH">ETH</option>
         </select>
-        <input type="number" placeholder="Expected" id="toAmount" disabled>
+        <input type="number" placeholder="Expected" id="toAmount" disabled />
       </div>
 
       <button class="swap-button">Initiate Swap</button>
+      <div class="quantum-progress"><div class="progress-energy"></div></div>
+    </div>
+  </div>
 
-      <div class="quantum-progress">
-        <div class="progress-energy"></div>
-      </div>
-    </div>
-  </div>
-  
   <div class="entanglement-panel">
-  <div class="panel-header">Entanglement Sync Monitor</div>
-  <div class="node-info">
-    <div>Node ID: <span class="highlight">QNode-X21</span></div>
-    <div>Status: <span id="sync-status" class="status synced">Synced</span></div>
-  </div>
-  <div class="entanglement-strength">
-    <label>Entanglement Strength</label>
-    <div class="strength-bar">
-      <div class="bar-fill" id="strength-fill" style="width: 84%;"></div>
+    <h2>Entanglement Sync Monitor</h2>
+    <div class="node-info">
+      <div>Node ID: <span class="highlight">QNode-X21</span></div>
+      <div>Status: <span id="sync-status" class="status synced">Synced</span></div>
     </div>
-    <div class="percent-text" id="strength-percent">84%</div>
+    <div class="entanglement-strength">
+      <label>Entanglement Strength</label>
+      <div class="strength-bar">
+        <div class="bar-fill" id="strength-fill" style="width: 84%;"></div>
+      </div>
+      <div class="percent-text" id="strength-percent">84%</div>
+    </div>
+    <div class="timestamp">Last Sync: <span id="last-sync">2025-04-20 23:32:10</span></div>
   </div>
-  <div class="timestamp">
-    Last Sync: <span id="last-sync">2025-04-20 23:32:10</span>
-  </div>
-</div>
 
   <div class="market-intelligence-hud">
+    <h2>Market Intelligence HUD</h2>
     <div class="market-data">
-        <div class="market-price">
-            <span id="eth-price">ETH: $0.00</span>
-            <span id="gprf-price">GPRF: $0.00</span>
-            <span id="usdt-price">USDT: $0.00</span>
-        </div>
-        <div class="market-indicators">
-            <div id="eth-indicator" class="indicator"></div>
-            <div id="gprf-indicator" class="indicator"></div>
-            <div id="usdt-indicator" class="indicator"></div>
-        </div>
+      <div class="market-price">
+        <span id="eth-price">ETH: $0.00</span>
+        <span id="gprf-price">GPRF: $0.00</span>
+        <span id="usdt-price">USDT: $0.00</span>
+      </div>
+      <div class="market-indicators">
+        <div id="eth-indicator" class="indicator"></div>
+        <div id="gprf-indicator" class="indicator"></div>
+        <div id="usdt-indicator" class="indicator"></div>
+      </div>
     </div>
     <div class="market-stats">
-        <div id="trade-volume">Volume: $0.00</div>
-        <div id="market-trends">Trends: Neutral</div>
+      <div id="trade-volume">Volume: $0.00</div>
+      <div id="market-trends">Trends: Neutral</div>
     </div>
   </div>
 
   <div class="live-trade-feed">
     <h2>Live Trade Feed</h2>
-    
-    <div class="market-data">
-        <div class="token-price">
-            <h3>ETH Price: <span id="eth-price">Loading...</span></h3>
-        </div>
-        <div class="token-price">
-            <h3>GPRF Price: <span id="gprf-price">Loading...</span></h3>
-        </div>
-        <div class="token-price">
-            <h3>USDT Price: <span id="usdt-price">Loading...</span></h3>
-        </div>
-    </div>
-    
+    <div class="token-price"><h3>ETH Price: <span id="eth-price">Loading...</span></h3></div>
+    <div class="token-price"><h3>GPRF Price: <span id="gprf-price">Loading...</span></h3></div>
+    <div class="token-price"><h3>USDT Price: <span id="usdt-price">Loading...</span></h3></div>
     <div class="trade-activity">
-        <h3>Latest Trades</h3>
-        <ul id="trade-list">
-            <li>Loading...</li>
-        </ul>
+      <h3>Latest Trades</h3>
+      <ul id="trade-list"><li>Loading...</li></ul>
     </div>
-    
     <div class="price-chart">
-        <h3>Price Chart</h3>
-        <canvas id="priceChart"></canvas>
+      <h3>Price Chart</h3>
+      <canvas id="priceChart"></canvas>
     </div>
-    
     <div class="market-indicators">
-        <h3>Market Indicators</h3>
-        <div class="indicator" id="market-indicator">
-            <span>Trend: Stable</span>
-        </div>
+      <h3>Market Indicators</h3>
+      <div class="indicator" id="market-indicator"><span>Trend: Stable</span></div>
     </div>
   </div>
 
   <div class="wallet-access-panel">
     <h2>Wallet Access</h2>
-
     <div class="wallet-summary">
-        <p>ETH Balance: <span id="eth-balance">0 ETH</span></p>
-        <p>GPRF Balance: <span id="gprf-balance">0 GPRF</span></p>
-        <p>USDT Balance: <span id="usdt-balance">0 USDT</span></p>
+      <p>ETH Balance: <span id="eth-balance">0 ETH</span></p>
+      <p>GPRF Balance: <span id="gprf-balance">0 GPRF</span></p>
+      <p>USDT Balance: <span id="usdt-balance">0 USDT</span></p>
     </div>
-
     <div class="staking-status">
-        <h3>Staking Status</h3>
-        <p>Staked GPRF: <span id="staked-gprf">0 GPRF</span></p>
-        <p>Staking Rewards: <span id="staking-rewards">0</span></p>
+      <h3>Staking Status</h3>
+      <p>Staked GPRF: <span id="staked-gprf">0 GPRF</span></p>
+      <p>Staking Rewards: <span id="staking-rewards">0</span></p>
     </div>
-
     <div class="reputation-status">
-        <h3>Reputation</h3>
-        <p>Reputation Level: <span id="user-reputation">Bronze</span></p>
+      <h3>Reputation</h3>
+      <p>Reputation Level: <span id="user-reputation">Bronze</span></p>
     </div>
-
     <div class="action-buttons">
-        <button id="stake-btn">Stake Tokens</button>
-        <button id="claim-reward-btn">Claim Reward</button>
-        <button id="transfer-btn">Transfer Tokens</button>
+      <button id="stake-btn">Stake Tokens</button>
+      <button id="claim-reward-btn">Claim Reward</button>
+      <button id="transfer-btn">Transfer Tokens</button>
     </div>
   </div>
-  
-  
-
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
-  <script src="entanglement-monitor.js"></script>
-  <script src="market.js"></script>
-  <script src="feed.js"></script>
+  <script>
+    // Dummy JavaScript untuk animasi asas, gantikan dengan sambungan kontrak nanti
+    document.querySelector('.swap-button').addEventListener('click', () => {
+      alert('Swap Initiated');
+    });
+  </script>
 </body>
 </html>
