@@ -1,0 +1,46 @@
+.market-intelligence-hud {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.market-data {
+    margin-bottom: 20px;
+}
+
+.market-price span {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.market-indicators .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.market-stats {
+    font-size: 16px;
+    text-align: center;
+}
+
+#eth-indicator {
+    background-color: green;
+}
+
+#gprf-indicator {
+    background-color: red;
+}
+
+#usdt-indicator {
+    background-color: yellow;
+}
