@@ -1,0 +1,42 @@
+/* Styles for Quantum Trade City */
+.quantum-trade-city {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.market-intelligence, .quantum-swap, .live-trade-feed, .wallet-access {
+    background-color: #222;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2 {
+    color: #04AA6D; /* Neon green */
+}
+
+button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #03855C;
+}
+
+#tradeFeed {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#tradeFeed li {
+    background-color: #333;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}
