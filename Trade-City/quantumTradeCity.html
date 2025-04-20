@@ -6,6 +6,7 @@
   <title>Quantum Swap Module</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="entanglement-monitor.css">
+  <link rel="stylesheet" href="market.css">
   
 </head>
 <body class="dark-theme">
@@ -59,6 +60,26 @@
     Last Sync: <span id="last-sync">2025-04-20 23:32:10</span>
   </div>
 </div>
+
+  <div class="market-intelligence-hud">
+    <div class="market-data">
+        <div class="market-price">
+            <span id="eth-price">ETH: $0.00</span>
+            <span id="gprf-price">GPRF: $0.00</span>
+            <span id="usdt-price">USDT: $0.00</span>
+        </div>
+        <div class="market-indicators">
+            <div id="eth-indicator" class="indicator"></div>
+            <div id="gprf-indicator" class="indicator"></div>
+            <div id="usdt-indicator" class="indicator"></div>
+        </div>
+    </div>
+    <div class="market-stats">
+        <div id="trade-volume">Volume: $0.00</div>
+        <div id="market-trends">Trends: Neutral</div>
+    </div>
+  </div>
+  
 
 
   <script src="script.js"></script>
