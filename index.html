@@ -472,6 +472,38 @@ const render = gpu.createKernel(function (t) {
 
     return quantumEffect;  // Menghasilkan kesan quantum
 }).setOutput([256, 256]);
+    
+    // Fungsi untuk mencipta GPUProofHash berdasarkan kesan quantum
+function generateGPUProofHash(t) {
+    // Dapatkan hasil daripada GPU computation (Quantum Threads)
+    const result = render(t);
+
+    // Gabungkan hasil GPU (quantum effect) ke dalam hash
+    let hash = 0;
+    for (let i = 0; i < result.length; i++) {
+        hash = (hash << 5) - hash + Math.floor(result[i] * 255);  // Simple hash function
+    }
+
+    // Gabungkan dengan timestamp dan nonce untuk meningkatkan keselamatan
+    let nonce = Math.random();
+    let timestamp = Date.now();
+
+    // Menghasilkan final hash untuk GPUProof
+    let finalHash = (hash + nonce + timestamp) % 1000000007;  // Menggunakan modulus untuk mengehadkan nilai
+
+    return finalHash;  // Return hash untuk digunakan dalam blockchain
+}
+    // Fungsi untuk menguji penciptaan hash
+let t = 0;  // Masa untuk quantum effect
+let gpuProofHash = generateGPUProofHash(t);
+console.log("GPUProofHash:", gpuProofHash);
+
+// Untuk ujian dinamik, kita boleh mengubah nilai t untuk melihat perubahan hash
+setInterval(() => {
+    t += 0.01;  // Menambah masa untuk mencipta perubahan dalam hash
+    gpuProofHash = generateGPUProofHash(t);
+    console.log("Updated GPUProofHash:", gpuProofHash);
+}, 1000);  // Mengemaskini setiap saat untuk melihat perubahan
 
 // Fungsi untuk melukis hasil ke dalam canvas
 function drawToCanvas(result) {
