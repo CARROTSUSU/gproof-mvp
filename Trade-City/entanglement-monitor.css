@@ -1,0 +1,77 @@
+.entanglement-panel {
+  background: linear-gradient(145deg, #0f0f2f, #1a1a3d);
+  border: 2px solid #00fff2;
+  border-radius: 16px;
+  padding: 20px;
+  color: #e0f7fa;
+  font-family: 'Orbitron', sans-serif;
+  width: 350px;
+  box-shadow: 0 0 12px #00fff2;
+}
+
+.panel-header {
+  font-size: 20px;
+  font-weight: bold;
+  color: #00fff2;
+  margin-bottom: 12px;
+}
+
+.node-info {
+  margin-bottom: 16px;
+}
+
+.highlight {
+  color: #fff;
+  font-weight: 600;
+}
+
+.status {
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.synced {
+  background-color: rgba(0, 255, 200, 0.2);
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+}
+
+.desynced {
+  background-color: rgba(255, 0, 60, 0.2);
+  color: #ff3050;
+  border: 1px solid #ff3050;
+}
+
+.entanglement-strength {
+  margin-bottom: 12px;
+}
+
+.strength-bar {
+  background: #222;
+  border: 1px solid #00fff2;
+  border-radius: 10px;
+  height: 14px;
+  margin-top: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  background: linear-gradient(90deg, #00ffcc, #0088ff);
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+.percent-text {
+  margin-top: 4px;
+  font-size: 14px;
+  text-align: right;
+  color: #00fff2;
+}
+
+.timestamp {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 10px;
+}
