@@ -1,25 +1,21 @@
-// Toggle Quantum Vision and Wireframe Mode
-const toggleModeBtn = document.getElementById('toggleMode');
-if (toggleModeBtn) {
-    toggleModeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('wireframe');
-        document.body.classList.toggle('quantum-vision');
-    });
-}
+// Quantum Vision Mode (responsive for mobile)
+document.addEventListener("DOMContentLoaded", () => {
+    applyQuantumVision();
+});
 
-// Simulated Data Fetch
-function updatePrices() {
+function applyQuantumVision() {
+    document.body.classList.add('quantum-vision');
+
+    // Update Prices
     document.getElementById('ethPrice').innerText = "$3,102";
     document.getElementById('gprfPrice').innerText = "$0.12";
     document.getElementById('usdtPrice').innerText = "$1.00";
-}
 
-function updateEnergyBar(percent = 100) {
+    // Energy Bar
     const fill = document.querySelector('.energy-fill');
-    if (fill) fill.style.width = percent + '%';
-}
+    if (fill) fill.style.width = '82%';
 
-function populateTradeFeed() {
+    // Live Trade Feed
     const tradeFeed = document.getElementById('tradeFeed');
     const sample = [
         { avatar: '🧠', user: 'Node001', rep: 92, amount: '120 GPRF' },
@@ -33,9 +29,3 @@ function populateTradeFeed() {
         tradeFeed.appendChild(li);
     });
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-    updatePrices();
-    updateEnergyBar(82);
-    populateTradeFeed();
-});
