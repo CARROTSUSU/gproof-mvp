@@ -1,5 +1,7 @@
 // Pastikan anda telah memasang ethers.js atau Web3.js, contohnya dengan CDN
 // <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.umd.min.js"></script>
+// Sambungkan ke Wallet menggunakan Ethers.js
+let provider, signer, userAddress;
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 let signer, userAddress;
