@@ -1,322 +1,254 @@
-/* Base Styles */
+/* Basic Settings */
 body.quantum-vision {
-  background: linear-gradient(180deg, #01010a, #111);
-  color: #00f9ff;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.9), rgba(3, 0, 255, 0.2), rgba(255, 0, 255, 0.1));
+  color: #00ffff;
   font-family: 'Orbitron', sans-serif;
-  padding: 1rem;
-}
-
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #050a1f;
-  padding: 0.8rem 1.2rem;
-  box-shadow: 0 0 12px #0ff;
-}
-
-.nav-bar ul {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  padding: 0;
+  padding: 2rem;
   margin: 0;
+  overflow: hidden;
 }
 
-.nav-bar a {
-  color: #0ff;
-  text-decoration: none;
-  transition: color 0.3s;
+h1, h2, h3, h4, h5, h6 {
+  color: #00f9ff;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.4);
+  font-weight: bold;
 }
 
-.nav-bar a.active, .nav-bar a:hover {
+a {
   color: #ff00ff;
+  text-decoration: none;
+  transition: all 0.4s ease-in-out;
 }
 
-/* Grid Layout */
+a:hover, a.active {
+  color: #00ff00;
+  text-shadow: 0 0 15px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.7);
+}
+
+/* Advanced Grid Layout */
 .trade-city {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  padding-top: 2rem;
+  position: relative;
+  z-index: 2;
 }
 
+/* Panels with Neon Glow and Hover Effects */
 .panel {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid #0ff;
-  border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 0 15px #0ff4;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #0ff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), 0 0 80px rgba(0, 255, 255, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.4s ease;
 }
 
-/* Swap UI */
-.swap-ui, .prices {
+.panel:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 100px rgba(0, 255, 255, 1), 0 0 200px rgba(0, 255, 255, 0.6);
+}
+
+.swap-ui {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .swap-arrow {
-  font-size: 1.5rem;
-  color: #fff;
+  font-size: 3rem;
+  color: #00ffff;
+  transform: rotate(180deg);
+  animation: arrow-bounce 1s infinite alternate;
+}
+
+@keyframes arrow-bounce {
+  0% { transform: translateY(0) rotate(180deg); }
+  100% { transform: translateY(-10px) rotate(180deg); }
 }
 
 .energy-bar {
-  height: 10px;
+  height: 12px;
   width: 100%;
-  background: #222;
-  border: 1px solid #0ff;
-  border-radius: 5px;
-  margin-top: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  margin-top: 1rem;
   overflow: hidden;
 }
 
 .energy-fill {
+  background: linear-gradient(120deg, #00ff00, #00ffff, #ff00ff);
   height: 100%;
-  background: linear-gradient(to right, #00f9ff, #ff00ff);
+  animation: energy-fill 2s infinite ease-out;
 }
 
-/* Animation Effects */
-.waveform, .qr-hologram, .field-generator {
-  height: 80px;
-  background: repeating-linear-gradient(90deg, #0ff 0px, #0ff 2px, transparent 2px, transparent 4px);
-  animation: pulse 2s infinite;
-  margin-bottom: 1rem;
-  border-radius: 8px;
+@keyframes energy-fill {
+  0% { width: 0%; }
+  50% { width: 80%; }
+  100% { width: 100%; }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+/* Hologram Effects */
+.hologram {
+  position: relative;
+  background: rgba(0, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 60px rgba(0, 255, 255, 1), 0 0 120px rgba(0, 255, 255, 0.7);
 }
 
-/* Buttons */
+.hologram:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  background: rgba(0, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: hologram-spin 6s infinite linear;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes hologram-spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Interactive Button with 3D Effects */
 button {
-  background: #0ff;
-  color: #000;
+  background: #ff00ff;
+  color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
   font-weight: bold;
-  border-radius: 8px;
-  box-shadow: 0 0 8px #0ff;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 1), 0 0 20px rgba(255, 0, 255, 0.7);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 button:hover {
-  background: #ff00ff;
-  box-shadow: 0 0 10px #ff00ff;
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(255, 0, 255, 1), 0 0 100px rgba(255, 0, 255, 0.7);
 }
 
-/* Wireframe Mode */
-body.wireframe {
-  background: #fff;
-  color: #000;
-  font-family: sans-serif;
+button:active {
+  transform: scale(1);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
 }
 
-body.wireframe .panel {
-  border: 2px dashed #000;
-  background: none;
-  box-shadow: none;
-}
-
-body.wireframe .nav-bar {
-  background: #eee;
-  box-shadow: none;
-}
-
-body.wireframe button {
-  background: #000;
-  color: #fff;
-  box-shadow: none;
-}
-
-/* Entanglement Panel */
+/* Entanglement Sync Indicator */
 .entanglement-panel {
-  background: linear-gradient(145deg, #0f0f2f, #1a1a3d);
-  border: 2px solid #00fff2;
-  border-radius: 16px;
-  padding: 20px;
-  color: #e0f7fa;
-  font-family: 'Orbitron', sans-serif;
-  width: 350px;
-  box-shadow: 0 0 12px #00fff2;
-}
-
-.panel-header {
-  font-size: 20px;
-  font-weight: bold;
-  color: #00fff2;
-  margin-bottom: 12px;
-}
-
-.node-info {
-  margin-bottom: 16px;
-}
-
-.highlight {
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 255, 0.4));
+  padding: 2rem;
+  border-radius: 30px;
   color: #fff;
-  font-weight: 600;
-}
-
-.status {
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 8px;
-}
-
-.synced {
-  background-color: rgba(0, 255, 200, 0.2);
-  color: #00ffcc;
-  border: 1px solid #00ffcc;
-}
-
-.desynced {
-  background-color: rgba(255, 0, 60, 0.2);
-  color: #ff3050;
-  border: 1px solid #ff3050;
-}
-
-.entanglement-strength {
-  margin-bottom: 12px;
-}
-
-.strength-bar {
-  background: #222;
-  border: 1px solid #00fff2;
-  border-radius: 10px;
-  height: 14px;
-  margin-top: 4px;
-  overflow: hidden;
+  border: 2px solid #00fff2;
+  box-shadow: 0 0 50px rgba(0, 255, 242, 1);
   position: relative;
 }
 
-.bar-fill {
-  background: linear-gradient(90deg, #00ffcc, #0088ff);
-  height: 100%;
-  transition: width 0.5s ease-in-out;
+.entanglement-panel .status {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  color: #fff;
+  text-align: center;
 }
 
-.percent-text {
-  margin-top: 4px;
-  font-size: 14px;
-  text-align: right;
-  color: #00fff2;
+.entanglement-panel .synced {
+  color: #00ffcc;
 }
 
-.timestamp {
-  font-size: 13px;
-  color: #aaa;
+.entanglement-panel .desynced {
+  color: #ff3050;
+}
+
+/* Live Market Feed */
+.live-trade-feed {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  color: #fff;
+  border-radius: 15px;
+  position: absolute;
+  top: 10%;
+  right: 2%;
+  width: 300px;
+  box-shadow: 0 0 100px rgba(0, 255, 255, 0.8);
+}
+
+.live-trade-feed h3 {
+  text-align: center;
+  color: #ff00ff;
+  margin-bottom: 20px;
+}
+
+.live-trade-feed .price {
+  font-size: 20px;
+  text-align: center;
+}
+
+.live-trade-feed .market-data {
   margin-top: 10px;
 }
 
-/* Live Trade Feed */
-.live-trade-feed {
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 350px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    position: absolute;
-    top: 40%;
-    left: 70%;
-}
-
-h2 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-.market-data {
-    margin-bottom: 20px;
-}
-
-.token-price {
-    margin-bottom: 10px;
-    font-size: 18px;
-}
-
-.trade-activity {
-    margin-bottom: 20px;
-}
-
 #trade-list {
-    list-style-type: none;
-    padding-left: 0;
-    font-size: 14px;
+  list-style: none;
+  padding: 0;
+  font-size: 12px;
+  text-align: left;
 }
 
 #trade-list li {
-    background-color: #333;
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 5px;
+  background: rgba(0, 255, 255, 0.1);
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
-.price-chart {
-    margin-bottom: 20px;
+#trade-list li:hover {
+  background: rgba(0, 255, 255, 0.3);
 }
 
-.market-indicators {
-    text-align: center;
-}
-
-.indicator {
-    padding: 10px;
-    background-color: #1d1d1d;
-    color: #f39c12;
-    border-radius: 5px;
-}
-
-/* Market Intelligence HUD */
+/* Quantum Indicator */
 .market-intelligence-hud {
-    position: absolute;
-    top: 10%;
-    right: 5%;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-    font-family: 'Arial', sans-serif;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 30px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.8);
 }
 
-.market-data {
-    margin-bottom: 20px;
+.market-intelligence-hud .market-data {
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 
-.market-price span {
-    font-size: 18px;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.market-indicators .indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.market-stats {
-    font-size: 16px;
-    text-align: center;
+.market-intelligence-hud .indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 #eth-indicator {
-    background-color: green;
+  background-color: #00ff00;
 }
 
 #gprf-indicator {
-    background-color: red;
+  background-color: #ff00ff;
 }
 
 #usdt-indicator {
-    background-color: yellow;
+  background-color: #ffcc00;
 }
