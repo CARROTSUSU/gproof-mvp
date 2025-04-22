@@ -157,8 +157,8 @@ audio {
       <p><strong>Address:</strong> <span id="wallet">Not connected</span></p>
       <p><strong>Reputation:</strong> <span id="reputation">0</span></p>
       <p><strong>Tasks Completed:</strong> <span id="tasksCompleted">0</span></p>
-      <button onclick="connectWallet()">Connect Wallet</button>
-      <div id="wallet">Belum disambung</div>
+      <button id="sambung-btn">Sambung Wallet</button>
+  <div id="wallet">Wallet: Belum disambung</div>
       <button onclick="connectWalletConnect()">Connect via WalletConnect</button>
 <p id="wallet-address"></p>
     </div>
@@ -246,7 +246,7 @@ audio {
 <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
       <!-- Web3.js -->
 <script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
-      
+<script src="js/wallet.js"></script>
 
   <script>
     
